@@ -12,3 +12,15 @@ Angular is a javascript framework that allows you to create **reactive** single 
 ## Angular vs Angular 2 vs Latest Angular
 
 The first version of Angular was Angular 1 or AngularJS, and the next version of Angular came out in 2016 which was Angular 2. Angular 2 was a completely rewritten version of Angular compared to Angular 1 or AngularJS. Now the latest version of Angular is Angular 17 (as of writing) which was built on top of Angular 2, 3, 4, ..., and so on, ever since it was released in 2016. But you can just call it Angular.
+
+To create a new angular project use:
+
+```bash
+ng new my-first-app
+```
+
+To run an angular app use:
+
+```bash
+ng serve
+```
