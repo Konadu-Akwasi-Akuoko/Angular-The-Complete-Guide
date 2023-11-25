@@ -208,3 +208,64 @@ export class MyComponent { }
 In this example, the component `MyComponent` will be applied to any element in the template that has a `class="app-my-component"`².
 
 Class selectors are mainly meant to be used for Angular directives, but you can use them as component selectors as well. They can be particularly useful in certain scenarios, such as when you want to apply a component to a specific HTML element without disrupting the DOM structure.
+
+## Data Binding
+
+**Data binding** in Angular is a technique that keeps your data in sync between your TypeScript code (component) and your view (DOM) or HTML template. It allows you to define a communication between your component and the DOM.
+
+There are four forms of data binding in Angular:
+
+1. **String Interpolation**: Uses the template expression in double curly braces `{{}}` to display data from the component to the view.
+
+2. **Property Binding**: Helps to bind values to DOM properties of HTML elements.
+
+3. **Event Binding**: Allows your app to respond to user input in the target environment.
+
+4. **Two-Way Data Binding**: Combines property and event binding in a single notation using the `ngModel` directive¹. Here, the data property value flows from the component to the input box as well as from the input box to the component.
+
+In contrast, React uses a concept called **"controlled components"** for data binding. In React, the state of the component controls the input elements, and changes to the input element update the state. This is often referred to as **"one-way data binding"** because the data flows in a single direction, from the component's state (source of truth) to the view.
+
+To achieve **two-way data binding** in React, you can use an `onChange` event handler to update the state when the user changes the input value. This makes it seem like two-way data binding, but under the hood, it's still one-way data binding happening twice (from the component to the view and from the view to the component).
+
+In summary, while both Angular and React allow for data binding, they approach it in slightly different ways. Angular provides built-in directives for various types of data binding, whereas React achieves this using its state and props with controlled components.
+
+### String Interpolation
+
+**String interpolation** is a one-way data binding technique in Angular that is used to output the data from a TypeScript code to an HTML template (view). It uses the template expression in double curly braces `{{ }}` to display the data from the component to the view. The only condition for the curly braces is that whatever you call inside them must resolve to a string, so it can be a function, or a property of the class, or you can even hardcode a string in there.
+
+For example, if you have a component with a property `title`:
+
+```typescript
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'Angular Interpolation Example';
+}
+```
+
+You can use string interpolation in your HTML template to display the value of `title`:
+
+```html
+<h1>{{ title }}</h1>
+```
+
+In this example, the `{{ title }}` in the HTML is replaced by the value of the `title` property from the component, and "Angular Interpolation Example" is displayed on the screen.
+
+If the value of `title` changes in the component, Angular automatically updates the view to reflect the new value. This is the essence of one-way data binding - the data flows in one direction, from the component to the view.
+
+<details>
+<summary>
+
+**Sidetracking: `ngOnInit`**
+</summary>
+<br>
+
+`ngOnInit` is a lifecycle hook in Angular that is called after the constructor is called and after the component’s inputs have been initialized. It is used to perform any additional initialization that is required for the component. `ngOnInit` is commonly used to call services or to set up subscriptions².
+
+In terms of React, `ngOnInit` is somewhat similar to using `useEffect` with an empty dependency array. When you pass an empty array (`[]`) as the second argument to `useEffect`, it ensures that the effect function only runs once after the initial render, similar to how `ngOnInit` runs once after the component's inputs have been initialized.
+
+However, there are some differences between the two. In Angular, `ngOnInit` is a lifecycle hook that is a part of the component's class, whereas in React, `useEffect` is a Hook that's used inside functional components. Also, `useEffect` can be used for running side effects after every render or when certain props/state values change, not just after the initial render.
+</details>
