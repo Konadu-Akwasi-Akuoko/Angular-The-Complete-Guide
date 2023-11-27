@@ -1,7 +1,15 @@
 <hr />
-<div class="bg-success">
+<div>
   <p>servers works!</p>
   <app-server />
+
   <hr />
-  <app-server />
+
+  <p class="bg-primary badge" [innerText]="'And the name is ' + name"></p>
+
+  <hr />
+
+  <button class="btn btn-primary" [disabled]="!isSeverAllowed">
+    Add Servers
+  </button>
 </div>

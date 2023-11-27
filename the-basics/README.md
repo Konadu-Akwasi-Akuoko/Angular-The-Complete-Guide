@@ -269,3 +269,60 @@ In terms of React, `ngOnInit` is somewhat similar to using `useEffect` with an e
 
 However, there are some differences between the two. In Angular, `ngOnInit` is a lifecycle hook that is a part of the component's class, whereas in React, `useEffect` is a Hook that's used inside functional components. Also, `useEffect` can be used for running side effects after every render or when certain props/state values change, not just after the initial render.
 </details>
+
+<details>
+<summary>
+
+**Sidetracking: `extend` vs `implements` in OOP**
+</summary>
+<br>
+
+In Object-Oriented Programming (OOP), `implements` and `extends` are used for different purposes:
+
+- `extends`: This keyword is used for class inheritance. When a class `extends` another class, it inherits all of the parent class's methods and properties. The child class can then add new methods and properties or override the inherited ones. This is a way to create a specialized version of a class. For example, if you have a Vehicle class, you might have Car and Motorcycle classes that extend Vehicle. They would inherit properties like speed and color, and they could add their own properties like numberOfWheels.
+
+- `implements`: This keyword is used with interfaces. An interface is a structure that defines the contract for a class, without implementing any functionality itself. When a class `implements` an interface, it promises to provide the functionality defined by that interface. For example, you might have an interface Drivable with a method drive(). Any class that `implements` Drivable must have a drive() method. This is a way to ensure that a class meets a certain contract.
+
+In summary, `extends` is about inheritance (a "is a" relationship: a Car is a Vehicle), and `implements` is about fulfilling a contract (a "can do" relationship: a Car can Drive).
+</details>
+
+### Property Binding
+
+Property binding in Angular is a one-way data binding technique which is used to set the property of a view/HTML element. The value of a property of the html element is set to a property of a component class. Property binding is done using square brackets `[]`.
+
+For example, if you have a property in your component:
+
+```TypeScript
+export class AppComponent {
+  isDisabled = true;
+}
+```
+
+You can bind this property to the disabled property of a button in your view:
+
+```HTML
+<button [disabled]="isDisabled">Click me</button>
+```
+
+In this case, the button's disabled property is bound to the isDisabled property of the component. The button will be disabled or enabled based on the value of isDisabled in the component.
+
+Property binding can be used with a `<p>` tag to set the `innerText` property. This is similar to how it works with other HTML elements. Here's an example:
+
+```HTML
+<p [innerText]="'Hello ' + name"></p>
+In your component:
+```
+
+In your component:
+
+```TypeScript
+export class AppComponent {
+  name = 'John';
+}
+```
+
+In this case, the innerText of the `<p>` tag is bound to the expression `'Hello ' + name`. The `innerText` will be updated whenever the name property changes in the component.
+
+This is a one-way data binding because the data flows from the component to the view, but not the other way around. Changes in the view (like user input) do not affect the component property.
+
+### Property Binding vs String Interpolation

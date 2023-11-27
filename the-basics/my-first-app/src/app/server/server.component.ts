@@ -1,33 +1,26 @@
-import { Component } from '@angular/core';
-import { count } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-server',
   templateUrl: './server.component.html',
-  styleUrl: './server.component.css',
+  styleUrls: ['./server.component.css'],
 })
-export class ServerComponent {
-  async ngOnInit() {
-    this.addToCounter();
-  }
+export class ServerComponent implements OnInit {
   serverId = 10;
   serverStatus = 'offline';
   counter = 0;
+
+  ngOnInit() {
+    this.addToCounter();
+  }
 
   getServerStatus() {
     return this.serverStatus;
   }
 
-  async addToCounter() {
-    let counterValue = 0;
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        counterValue = this.counter + 10;
-        resolve(null);
-      }, 1000);
-    });
-
-    this.counter = counterValue;
-    return this.addToCounter();
+  addToCounter() {
+    setInterval(() => {
+      this.counter += 10;
+    }, 1000);
   }
 }
