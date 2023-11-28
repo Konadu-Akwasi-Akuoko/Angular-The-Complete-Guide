@@ -14,10 +14,16 @@ import { Component } from '@angular/core';
 })
 export class ServersComponent {
   isSeverAllowed = false;
-  name = "Akuoko Konadu Akwasi"
+  name = 'Akuoko Konadu Akwasi';
+  serverCreationStatus = 'No server was created!';
+
   constructor() {
     setTimeout(() => {
       this.isSeverAllowed = true;
     }, 2000);
+  }
+
+  onCreateServer() {
+    this.serverCreationStatus = 'Server was created';
   }
 }

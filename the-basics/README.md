@@ -326,3 +326,50 @@ In this case, the innerText of the `<p>` tag is bound to the expression `'Hello 
 This is a one-way data binding because the data flows from the component to the view, but not the other way around. Changes in the view (like user input) do not affect the component property.
 
 ### Property Binding vs String Interpolation
+
+In Angular, both property binding and string interpolation are used to bind data from the component to the template, but they work in slightly different ways:
+
+**Property Binding**:
+
+- Property binding uses `[html-property]` to send values from the component to the template.
+- It binds a property of a DOM element to a field, which is a defined property in the component TypeScript code.
+- Property binding does not convert the expression result to a string. So if you need to bind something other than a string to your directive/component property, you must use property binding.
+- Example: `<button [disabled]='isDisabled'>Try Me</button>`.
+
+**String Interpolation**:
+
+- String interpolation uses `{{ expression }}` to render the bound value to the component’s template.
+- It is a special syntax that Angular converts into a property binding.
+- Angular evaluates all expressions in double curly braces, converts the expression results to strings, and concatenates them with neighboring literal strings.
+- When you need to concatenate strings, you must use interpolation instead of property binding.
+- Example: `<button disabled='{{isDisabled}}'>Try Me</button>`.
+
+In summary, **use property binding when you want to bind a property to a non-string data value, and use string interpolation when you want to render a bound value to the template or need to concatenate strings.**
+
+### Event Binding
+
+Event binding in Angular is a technique that allows you to respond to user actions or other asynchronous events like mouse clicks, key presses, or data received from a network. It's a way to define how user interactions with the DOM (Document Object Model) result in changes to your application state.
+
+Event binding is defined in the template and is enclosed in parentheses `()`. The target event is placed within the parentheses on the left side of an equal sign, and a template statement is on the right.
+
+Here's an example of event binding in Angular:
+
+```HTML
+<button (click)="onButtonClick()">Click me</button>
+```
+
+In this example, `(click)` is the target event, and `onButtonClick()` is the template statement. When the button is clicked, the `onButtonClick()` method in the component is executed.
+
+In your component TypeScript file, you would define the `onButtonClick()` method:
+
+```TypeScript
+export class AppComponent {
+  onButtonClick() {
+    console.log('Button clicked!');
+  }
+}
+```
+
+In this case, when the button is clicked, "Button clicked!" is logged to the console.
+
+This is a one-way data binding because the data flows from the view to the component (from the DOM event to the component method), but not the other way around. Changes in the component do not affect the view.
