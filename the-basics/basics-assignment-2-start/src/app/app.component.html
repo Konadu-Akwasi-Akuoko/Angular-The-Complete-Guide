@@ -27,12 +27,11 @@
       class="form-control"
       [(ngModel)]="username"
       placeholder="username"
-      (input)="onUsernameInputChanged($event)"
     />
     <p class="form-text">{{ username }}</p>
   </div>
   <button
-    [disabled]="buttonDisabled"
+    [disabled]="username === ''"
     class="btn btn-primary"
     (click)="onResetButtonClicked()"
   >

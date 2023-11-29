@@ -213,6 +213,8 @@ Class selectors are mainly meant to be used for Angular directives, but you can 
 
 **Data binding** in Angular is a technique that keeps your data in sync between your TypeScript code (component) and your view (DOM) or HTML template. It allows you to define a communication between your component and the DOM.
 
+**NB: In all data binding simple javascript expressions like ternary operators, arithmetic operations, string concatenation, logical operations, equality checks, relational operations, nullish coalescing operators, and other will all work. But remember it is scoped to simple expressions, complex logic must go into the components.**
+
 There are four forms of data binding in Angular:
 
 1. **String Interpolation**: Uses the template expression in double curly braces `{{}}` to display data from the component to the view.

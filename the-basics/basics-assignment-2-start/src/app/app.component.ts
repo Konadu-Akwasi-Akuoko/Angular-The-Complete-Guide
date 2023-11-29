@@ -13,12 +13,4 @@ export class AppComponent {
     this.username = '';
     this.buttonDisabled = true;
   }
-
-  onUsernameInputChanged(event: Event) {
-    if ((<HTMLInputElement>event.target).value) {
-      this.buttonDisabled = false;
-    } else {
-      this.buttonDisabled = true;
-    }
-  }
 }
