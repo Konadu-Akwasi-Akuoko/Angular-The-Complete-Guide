@@ -399,4 +399,35 @@ If you don't pass `$event` like in `(click)="clicked()"`, then the event value i
 
 ### Two-way data binding
 
-In two way data binding we combine property and event binding.
+Two-way data binding in Angular is a mechanism that allows automatic synchronization of data between the model (component) and the view. This means that changes made to the model in the component are propagated to the view, and any changes made in the view are immediately updated in the underlying component data.
+
+Two-way data binding is useful in data entry forms. Whenever a user makes changes to a form field, we would like to update our model. Similarly, when we update the model with new data, we would like to update the view as well.
+
+The two-way data binding is nothing but both property binding and event binding applied together. Property Binding is one way from component to view. The event binding is one way from view to component. If we combine both we will get the Two-way binding.
+
+Here's an example of how it's used:
+
+```html
+<input type="text" [(ngModel)]="name">
+```
+
+In this example, `[(ngModel)]` is a built-in directive and is part of the `FormsModule`. It binds to a form element like input, select, selectarea, etc. Internally, it uses the `ngModel` in property binding to bind to the value property and `ngModelChange` which binds to the input event.
+
+If you want to use `[(ngModel)]` for two-way data binding in Angular, you need to import the `FormsModule` into your Angular module.
+
+Here's how you can do it:
+
+```typescript
+import { FormsModule } from '@angular/forms';
+
+@NgModule({
+  imports: [
+    FormsModule
+    // other imports here
+  ],
+  // declarations, providers, bootstrap, etc. here
+})
+export class AppModule { }
+```
+
+By adding `FormsModule` to the `imports` array in the `@NgModule` decorator, Angular will know to look for and enable the `[(ngModel)]` directive when it runs your code. This is a necessary step for two-way data binding to work properly in your Angular application.
