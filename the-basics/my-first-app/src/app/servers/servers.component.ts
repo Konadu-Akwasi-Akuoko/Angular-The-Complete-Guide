@@ -14,16 +14,20 @@ import { Component } from '@angular/core';
 })
 export class ServersComponent {
   isSeverAllowed = false;
-  name = 'Akuoko Konadu Akwasi';
+  serverName = 'Akuoko Konadu Akwasi';
   serverCreationStatus = 'No server was created!';
 
   constructor() {
     setTimeout(() => {
-      this.isSeverAllowed = true;
+      this.isSeverAllowed = true
     }, 2000);
   }
 
   onCreateServer() {
     this.serverCreationStatus = 'Server was created';
+  }
+
+  onInputServerNameChange(event: Event) {
+    this.serverName = (<HTMLInputElement>event.target).value;
   }
 }

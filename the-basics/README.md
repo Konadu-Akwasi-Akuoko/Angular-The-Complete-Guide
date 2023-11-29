@@ -373,3 +373,30 @@ export class AppComponent {
 In this case, when the button is clicked, "Button clicked!" is logged to the console.
 
 This is a one-way data binding because the data flows from the view to the component (from the DOM event to the component method), but not the other way around. Changes in the component do not affect the view.
+
+Also in Angular, `$event` is a special keyword that refers to the event object associated with the event that has just been triggered. The type of `$event` depends on the target event.
+
+For example, if the target event is a native DOM element event, then `$event` is an object representing the event, such as a `MouseEvent` or `KeyboardEvent`.
+
+Here's an example of how it's used:
+
+```html
+<button (click)="clicked($event)"></button>
+```
+
+```typescript
+@Component(...)
+class MyComponent {
+  clicked(event : Event) {
+    event.preventDefault();
+  }
+}
+```
+
+In this example, `$event` is passed to the `clicked` method when the button is clicked. Inside the `clicked` method, `event.preventDefault()` is called to prevent the default action associated with the event.
+
+If you don't pass `$event` like in `(click)="clicked()"`, then the event value is not passed. So, `$event` allows you to access and manipulate the event object within your component methods.
+
+### Two-way data binding
+
+In two way data binding we combine property and event binding.
