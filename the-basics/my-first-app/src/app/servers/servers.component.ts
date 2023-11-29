@@ -19,12 +19,13 @@ export class ServersComponent {
 
   constructor() {
     setTimeout(() => {
-      this.isSeverAllowed = true
+      this.isSeverAllowed = true;
     }, 2000);
   }
 
   onCreateServer() {
-    this.serverCreationStatus = 'Server was created';
+    this.serverCreationStatus =
+      'Server was created and the name of the server is ' + this.serverName;
   }
 
   onInputServerNameChange(event: Event) {
