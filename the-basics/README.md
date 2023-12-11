@@ -484,3 +484,20 @@ So, when you write `*ngIf="serverCreated"`, Angular translates it to something l
 ```
 
 This is why you see the `*` symbol in front of structural directives like `ngIf`, `ngFor`, and others. It's a powerful tool that Angular provides for manipulating the DOM structure directly from your templates.
+
+In Angular, the `ngIf; else` syntax allows you to conditionally render different templates based on a Boolean condition. Here's how it works:
+
+```html
+<p *ngIf="serverCreated; else noServer">{{ serverCreationStatus }}</p>
+<ng-template #noServer>
+  <p>No server was created</p>
+</ng-template>
+```
+
+In this code:
+
+- `*ngIf="serverCreated; else noServer"` is the conditional statement. If `serverCreated` is true, Angular will render the `<p>` element and display the `serverCreationStatus`.
+- `else noServer` specifies what to render if `serverCreated` is false. In this case, Angular will render the `noServer` template.
+- `<ng-template #noServer>` defines the `noServer` template. This template will be rendered if `serverCreated` is false.
+
+So, in essence, this code will display the `serverCreationStatus` if a server has been created (`serverCreated` is true). If a server has not been created (`serverCreated` is false), it will display "No server was created".
