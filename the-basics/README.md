@@ -517,9 +517,25 @@ In Angular 17, the `@if` and `@else` syntax is a new way to conditionally render
 In this code:
 
 - `@if (serverCreated)` is the conditional statement. If `serverCreated` is true, Angular will render the `<p>` element and display the `serverCreationStatus`.
-- `@else if (condition)` it also works like an `if else` in normal programming. 
+- `@else if (condition)` it also works like an `if else` in normal programming.
 - `@else` specifies what to render if `serverCreated` is false. In this case, Angular will render the block following the `@else`, which contains the message "No server was created".
 
 This new syntax is part of Angular 17's new template control flow features. It's more concise and readable than the previous `*ngIf` syntax, and it also supports `else if` and `else` conditions.
 
 Unlike the traditional `*ngIf` structural directive, you don't need to import `@if` in standalone components, it's automatically available everywhere¹. This is because the `@if` syntax is part of the template engine itself, and it is not a directive.
+
+### The `ngStyle` directive
+
+The `ngStyle` directive in Angular allows you to set inline styles of an HTML element using an expression. The expression can be evaluated at runtime, allowing you to dynamically change the style of your HTML element.
+
+```html
+<p [ngStyle]="{ backgroundColor: getColor() }">
+  Server with ID {{ serverId }} is {{ serverStatus }}
+</p>
+```
+
+Here, `ngStyle` is being used to dynamically set the `backgroundColor` style of the paragraph element. The `getColor()` method in your component returns either 'green' or 'red' depending on the `serverStatus`, and this value is used as the background color.
+
+This brings us to **property binding**. Property binding in Angular helps you set values for properties of HTML elements or directives. It's a one-way data binding technique that binds a property of a DOM element to a field defined in the component TypeScript code.
+
+In the case of `ngStyle`, you're binding the `style` property of the paragraph element to the object `{ backgroundColor: getColor() }`. This is an example of property binding, as you're setting the `style` property of the paragraph element based on the value of the `getColor()` method in your component.
