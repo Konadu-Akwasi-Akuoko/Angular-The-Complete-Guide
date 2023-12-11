@@ -277,7 +277,6 @@ However, there are some differences between the two. In Angular, `ngOnInit` is a
 
 **Sidetracking: `extend` vs `implements` in OOP**
 </summary>
-<br>
 
 In Object-Oriented Programming (OOP), `implements` and `extends` are used for different purposes:
 
@@ -539,3 +538,164 @@ Here, `ngStyle` is being used to dynamically set the `backgroundColor` style of 
 This brings us to **property binding**. Property binding in Angular helps you set values for properties of HTML elements or directives. It's a one-way data binding technique that binds a property of a DOM element to a field defined in the component TypeScript code.
 
 In the case of `ngStyle`, you're binding the `style` property of the paragraph element to the object `{ backgroundColor: getColor() }`. This is an example of property binding, as you're setting the `style` property of the paragraph element based on the value of the `getColor()` method in your component.
+
+### The `ngClass` directive
+
+The `ngClass` directive in Angular is used to add and remove CSS classes on an HTML element. It supports three types of expression "return values": String, Array, and Object.
+
+Here's how the CSS classes are updated, depending on the type of the expression evaluation¹:
+
+- **String**: The CSS classes listed in the string (space delimited) are added.
+- **Array**: The CSS classes declared as Array elements are added.
+- **Object**: Keys are CSS classes that get added when the expression given in the value evaluates to a truthy value, otherwise they are removed.
+
+Here are some examples¹:
+
+```html
+<some-element [ngClass]="'first second'">...</some-element>
+<some-element [ngClass]="['first', 'second']">...</some-element>
+<some-element [ngClass]="{'first': true, 'second': true, 'third': false}">...</some-element>
+<some-element [ngClass]="{'class1 class2 class3' : true}">...</some-element>
+```
+
+In these examples, the `ngClass` directive is used to add the classes 'first', 'second', and 'third' to the HTML element 'some-element' based on the conditions provided. The classes are added or removed dynamically as the conditions change.
+
+### The `ngFor` directive
+
+In Angular, `*ngFor` is a built-in directive that allows you to loop over an array or an object and create a template for each element.
+
+Here's an example:
+
+```javascript
+servers = ['test_server_1', 'test_server_2'];
+```
+
+This line declares an array named `servers` with two elements: `'test_server_1'` and `'test_server_2'`.
+
+```html
+<app-server *ngFor="let server of servers"  [serverId]="server" />
+```
+
+This line uses the `*ngFor` directive to loop over the `servers` array. For each element in the `servers` array, it creates an instance of the `<app-server>` component.
+
+So, if your `<app-server>` component has a `serverId` property, this loop will create two `<app-server>` components: one with `serverId` set to `'test_server_1'` and another with `serverId` set to `'test_server_2'`.
+
+Here is a different example:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'angular-project';
+  friendslist = [
+    { name: 'Nishant', age: 25 },
+    { name: 'Shailesh', age: 45 },
+    { name: 'Abhishek', age: 36 },
+    { name: 'Akshay', age: 65 },
+    { name: 'Ashish', age: 12 },
+    { name: 'Uday', age: 31 },
+    { name: 'Mayank', age: 45 },
+    { name: 'Raju', age: 74 },
+  ]
+}
+```
+
+In this example, we have an array of objects `friendslist` that contains people's names and their ages. Now, we will use `*ngFor` to display these names in the interface.
+
+In your HTML file, you can use `*ngFor` like this:
+
+```html
+<ul>
+  <li *ngFor="let item of friendslist">
+    {{ item.name }} is {{ item.age }} years old
+  </li>
+</ul>
+```
+
+In this example, we are creating an item using the `let` keyword of the `friendslist` array. It will iterate over each item in the array, and will print out the item name and item age. This is called **interpolation**, and it's how we show data in the HTML template.
+
+So, in this example, we are showing the list in a different format. Each line corresponds to an item in the `friendslist` array. The `*ngFor` directive iterates over each item and displays the name and age in the list.
+
+In the new Angular 17, they introduced the `@for` syntax that is replacing the `*ngFor` syntax, and it works just like how the normal for loop in programming works. Here is an example:
+
+```HTML
+<!-- !New Angular 17 syntax -->
+@for (server of servers; let index = $index; track servers[index]) {
+<app-server [serverId]="server" />
+}
+```
+
+This provides a more intuitive way to iterate over arrays in Angular templates. The `@for` syntax is built into the Angular template engine itself, so there's no need to import it manually into standalone components, unlike `ngFor`.
+
+Here's how the `@for` syntax works:
+
+```html
+@for (item of items; track item) {
+  // logic to repeat on each item
+}
+```
+
+- `item of items`: This statement defines the collection to be iterated over.
+- `track item`: This statement is used to track the items by reference⁵. It optimizes performance by preventing unnecessary change detection runs when the data changes.
+
+In your code:
+
+```html
+@for (server of servers; let index = $index; track servers[index]) {
+  <app-server [serverId]="server" />
+}
+```
+
+- `server of servers`: This statement is iterating over the `servers` array.
+- `let index = $index`: This statement is creating a variable `index` that holds the current index of the iteration.
+- `track servers[index]`: This statement is tracking the items in the `servers` array by their index.
+- `<app-server [serverId]="server" />`: This statement is creating an `app-server` component for each `server` in the `servers` array and passing the `server` as a property named `serverId` to the `app-server` component.
+
+The `@for` statement uses a new diffing algorithm and has a more optimal implementation compared to `*ngFor`, which makes it up to 90% faster runtime for community framework benchmarks. Therefore, using `@for` could lead to performance improvements in your Angular applications.
+
+<details>
+<summary>
+
+**Sidetracking: `@Input()`**
+</summary>
+
+In Angular, `@Input` is a decorator that makes a class field as an input property and supplies configuration metadata. The `@Input` decorator allows data to flow from a component's parent into the child component. It works a lot more like how React props works. It's used to bind a property within one component (child component) to receive a value from another component (parent component). Here's a simple example:
+
+```typescript
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<h1>{{ title }}</h1>`
+})
+export class ChildComponent {
+  @Input() title: string;
+}
+```
+
+Calling the child in a parent component's template:
+
+```HTML
+<app-child [title]="This is a title" />
+```
+
+In this example, `title` is an input property that can be set by the parent component.
+
+On the other hand, in React, `props` (short for properties) are used to pass data from a parent component to a child component. They are read-only and cannot be changed by the child component. Here's a simple example in React:
+
+```jsx
+function ChildComponent(props) {
+  return <h1>{props.title}</h1>;
+}
+```
+
+In this example, `title` is a prop that can be set by the parent component.
+
+So, the similarity between `@Input` in Angular and `props` in React is that both are mechanisms for passing data from parent components to child components. They allow child components to access data from parent components. However, the way they are implemented and used in the respective frameworks is different. In Angular, you use the `@Input` decorator to explicitly define input properties, while in React, you pass `props` as arguments to the component function or class.
+
+</details>
