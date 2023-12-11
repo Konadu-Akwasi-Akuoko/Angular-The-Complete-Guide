@@ -433,3 +433,28 @@ export class AppModule { }
 ```
 
 By adding `FormsModule` to the `imports` array in the `@NgModule` decorator, Angular will know to look for and enable the `[(ngModel)]` directive when it runs your code. This is a necessary step for two-way data binding to work properly in your Angular application.
+
+## Angular Directives
+
+Directives are simply, instructions in the DOM.
+
+When Angular renders the template, it looks for these directives and follows their instructions. This could mean manipulating the structure of the DOM, changing styles, handling events, or even transforming data.
+
+Here's a simple comparison:
+
+- **Components** are like **blueprints** for a house. They describe the structure and appearance of the house.
+- **Directives**, on the other hand, are like **instructions** for the construction workers. They tell the workers what to do - paint the walls, install the doors, lay the roof, etc.
+
+There are three types of Angular directives:
+
+1. **Components**: These are used with a template and are the most common directive type.
+2. **Attribute Directives**: These change the appearance or behavior of an element, component, or another directive.
+3. **Structural Directives**: These change the DOM layout by adding and removing DOM elements.
+
+Here are some examples of built-in attribute directives:
+
+- **NgClass**: Adds and removes a set of CSS classes.
+- **NgStyle**: Adds and removes a set of HTML styles.
+- **NgModel**: Adds two-way data binding to an HTML form element.
+
+These directives use only public APIs and do not have special access to any private APIs that other directives can't access. You can also define your own directives to attach custom behavior to elements in the DOM.
