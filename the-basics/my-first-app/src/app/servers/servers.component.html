@@ -32,6 +32,6 @@
   </button>
 
   <p>Add to server: {{ isSeverAllowed }}</p>
-  <p>{{ serverCreationStatus }}</p>
+  <p *ngIf="serverCreated">{{ serverCreationStatus }}</p>
   <!-- <p [innerText]="isSeverAllowed"></p> -->
 </div>

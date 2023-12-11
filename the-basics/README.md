@@ -458,3 +458,29 @@ Here are some examples of built-in attribute directives:
 - **NgModel**: Adds two-way data binding to an HTML form element.
 
 These directives use only public APIs and do not have special access to any private APIs that other directives can't access. You can also define your own directives to attach custom behavior to elements in the DOM.
+
+### The `ngIf` directive
+
+The `ngIf` directive in Angular is a **structural directive** that conditionally includes a template based on the value of an expression coerced to Boolean. When the expression evaluates to true, Angular renders the template provided in a then clause, and when false or null, Angular renders the template provided in an optional else clause, if there are any.
+
+```html
+<p *ngIf="serverCreated">{{ serverCreationStatus }}</p>
+```
+
+Here, `serverCreated` is the condition from the `component.ts` file. If `serverCreated` is true, then the paragraph element will be added to the DOM and the user will see the `serverCreationStatus` message. If `serverCreated` is false, then the paragraph element will not be added to the DOM, and the user will not see the message.
+
+This is different from hiding an element (which can be done using the `ngHide` or `ngShow` directives), as `ngIf` completely removes or recreates the element in the DOM. This can be beneficial for performance reasons, as Angular won't have to check for changes on hidden elements.
+
+The `*` symbol in Angular is used to denote a **structural directive**. Structural directives are a type of directive that manipulate the structure of the DOM. They can add, remove, or manipulate elements.
+
+The `*` before `ngIf` is a shorthand syntax that Angular uses to wrap the element and its children into an `<ng-template>` element. This is done because structural directives, like `ngIf`, work by manipulating this `<ng-template>`.
+
+So, when you write `*ngIf="serverCreated"`, Angular translates it to something like this under the hood:
+
+```html
+<ng-template [ngIf]="serverCreated">
+  <p>{{ serverCreationStatus }}</p>
+</ng-template>
+```
+
+This is why you see the `*` symbol in front of structural directives like `ngIf`, `ngFor`, and others. It's a powerful tool that Angular provides for manipulating the DOM structure directly from your templates.
