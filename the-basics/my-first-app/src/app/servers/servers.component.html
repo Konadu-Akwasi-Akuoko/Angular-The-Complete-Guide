@@ -15,9 +15,12 @@
 <hr />
 <div>
   <p>servers works!</p>
-  <app-server />
-  <app-server />
-  <!-- <app-server /> -->
+  <!-- Old angular syntax -->
+  <!-- <app-server *ngFor="let server of servers" [serverId]="server" /> -->
+  <!-- !New Angular 17 syntax -->
+  @for (server of servers; track server) {
+  <app-server [serverId]="server" />
+  }
 
   <hr />
 

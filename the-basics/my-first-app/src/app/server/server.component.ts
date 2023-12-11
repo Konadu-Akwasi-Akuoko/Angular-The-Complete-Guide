@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-server',
@@ -12,13 +12,19 @@ import { Component, OnInit } from '@angular/core';
     `,
     `
       h2 {
-        color: bisque;
+        color: brown;
+      }
+    `,
+    `
+      .offline {
+        color: white;
       }
     `,
   ],
 })
 export class ServerComponent implements OnInit {
-  serverId = 10;
+  @Input() serverId: string;
+
   serverStatus = 'offline';
   counter = 0;
 
