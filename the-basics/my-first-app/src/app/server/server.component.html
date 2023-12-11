@@ -1,8 +1,11 @@
-<p [ngStyle]="{ backgroundColor: getColor() }">
+<p
+  [ngStyle]="{ backgroundColor: getColor() }"
+  [ngClass]="{ online: serverStatus === 'online' }"
+>
   Server with ID {{ serverId }} is {{ serverStatus }}
 </p>
 <h4>And the server status is {{ getServerStatus() }}</h4>
 <h5>You can even type a string in here {{ "I am hardcoding this value" }}</h5>
-<p>The value will increase every 1000ms: {{ counter }}</p>
+<h2>The value will increase every 1000ms: {{ counter }}</h2>
 
 <hr />
