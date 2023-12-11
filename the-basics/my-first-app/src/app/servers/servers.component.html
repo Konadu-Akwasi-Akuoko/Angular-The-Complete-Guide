@@ -32,10 +32,18 @@
   </button>
 
   <p>Add to server: {{ isSeverAllowed }}</p>
-  <p *ngIf="serverCreated; else noServer">{{ serverCreationStatus }}</p>
+
+  <!-- The below is a way of doing this prior to Angular 17 -->
+  <!-- <p *ngIf="serverCreated; else noServer">{{ serverCreationStatus }}</p>
   <ng-template #noServer>
     <p>No server was created</p>
-  </ng-template>
+  </ng-template> -->
+  <!-- ! Angular 17 syntax -->
+  @if (serverCreated) {
+  <p>{{ serverCreationStatus }}</p>
+  } @else {
+  <p>No server was created</p>
+  }
 
   <!-- <p [innerText]="isSeverAllowed"></p> -->
 </div>

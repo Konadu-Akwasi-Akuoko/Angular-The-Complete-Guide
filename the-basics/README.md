@@ -501,3 +501,25 @@ In this code:
 - `<ng-template #noServer>` defines the `noServer` template. This template will be rendered if `serverCreated` is false.
 
 So, in essence, this code will display the `serverCreationStatus` if a server has been created (`serverCreated` is true). If a server has not been created (`serverCreated` is false), it will display "No server was created".
+
+### The `ngIf` directive (Angular 17)
+
+In Angular 17, the `@if` and `@else` syntax is a new way to conditionally render elements in your templates. Here's how it works:
+
+```html
+@if (serverCreated) {
+  <p>{{ serverCreationStatus }}</p>
+} @else {
+  <p>No server was created</p>
+}
+```
+
+In this code:
+
+- `@if (serverCreated)` is the conditional statement. If `serverCreated` is true, Angular will render the `<p>` element and display the `serverCreationStatus`.
+- `@else if (condition)` it also works like an `if else` in normal programming. 
+- `@else` specifies what to render if `serverCreated` is false. In this case, Angular will render the block following the `@else`, which contains the message "No server was created".
+
+This new syntax is part of Angular 17's new template control flow features. It's more concise and readable than the previous `*ngIf` syntax, and it also supports `else if` and `else` conditions.
+
+Unlike the traditional `*ngIf` structural directive, you don't need to import `@if` in standalone components, it's automatically available everywhere¹. This is because the `@if` syntax is part of the template engine itself, and it is not a directive.
