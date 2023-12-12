@@ -26,5 +26,15 @@
 
   <hr />
 
-  <button class="btn btn-primary">Display Details</button>
+  <app-component-button (dateToParent)="addDate($event)" />
+
+  <hr />
+
+  @if (showPass) {
+  <app-component-paragraph />
+  }
+
+  <hr />
+
+  <app-component-timestamp [timestamp]="timestamps" />
 </div>

@@ -661,7 +661,7 @@ The `@for` statement uses a new diffing algorithm and has a more optimal impleme
 <details>
 <summary>
 
-**Sidetracking: `@Input()`**
+**Sidetracking: `@Input()` and `@Output()`**
 </summary>
 
 In Angular, `@Input` is a decorator that makes a class field as an input property and supplies configuration metadata. The `@Input` decorator allows data to flow from a component's parent into the child component. It works a lot more like how React props works. It's used to bind a property within one component (child component) to receive a value from another component (parent component). Here's a simple example:
@@ -697,5 +697,41 @@ function ChildComponent(props) {
 In this example, `title` is a prop that can be set by the parent component.
 
 So, the similarity between `@Input` in Angular and `props` in React is that both are mechanisms for passing data from parent components to child components. They allow child components to access data from parent components. However, the way they are implemented and used in the respective frameworks is different. In Angular, you use the `@Input` decorator to explicitly define input properties, while in React, you pass `props` as arguments to the component function or class.
+
+Also in React, you pass data from a parent component to a child component through `props`. Similarly, in Angular, you use `@Input()` to pass data from a parent to a child.
+
+For example, in your code, `AppComponent` is passing the `timestamps` array to `ComponentTimestampComponent` through an `@Input()`:
+
+```html
+<app-component-timestamp [timestamp]="timestamps" />
+```
+
+This is similar to how you might pass props in React.
+
+Now, in React, if you want a child component to communicate back up to a parent, you typically pass a function down to the child via props, and the child calls that function. In Angular, you do something similar using `@Output()` and `EventEmitter`.
+
+In your `ComponentButtonComponent`, you define an `@Output()` called `dateToParent`:
+
+```typescript
+@Output() dateToParent = new EventEmitter<Date>();
+```
+
+This is like defining a function in your parent React component and passing it down to the child. When the button in `ComponentButtonComponent` is clicked, it emits an event with the current date:
+
+```typescript
+onButtonClick() {
+  this.dateToParent.emit(new Date());
+}
+```
+
+This is like calling the function you passed down in React. The parent `AppComponent` listens for this event and calls `addDate($event)` when it hears it:
+
+```html
+<app-component-button (dateToParent)="addDate($event)" />
+```
+
+This is similar to how in React, the parent component might pass a callback function.
+
+So, in summary, `@Input()` in Angular is like passing props in React, and `@Output()` with `EventEmitter` in Angular is like passing a callback function as a prop in React.
 
 </details>

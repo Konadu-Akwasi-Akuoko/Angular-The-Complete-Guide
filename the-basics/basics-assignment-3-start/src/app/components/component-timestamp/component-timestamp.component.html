@@ -1,0 +1,10 @@
+<div>
+  @for (time of timestamp; let i = $index; track time){
+  <p
+    [ngStyle]="{ 'background-color': i >= 4 && 'blue' }"
+    [ngClass]="i >= 4 && 'color'"
+  >
+    This was created at {{ time }}
+  </p>
+  }
+</div>
