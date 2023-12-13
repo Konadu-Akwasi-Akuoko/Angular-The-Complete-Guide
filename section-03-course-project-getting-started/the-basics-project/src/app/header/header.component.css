@@ -1,0 +1,12 @@
+.inline-flex {
+  display: inline-flex;
+}
+
+.display-flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.gap-24 {
+  gap: 24px;
+}
