@@ -4,6 +4,8 @@
   </div>
 </div>
 
+<hr />
+
 <div class="row">
   <div class="col-xs-12">
     @for (recipe of recipes; track $index) {
@@ -14,10 +16,10 @@
       </div>
       <span class="pull-right">
         <img
-          src="{{ recipe.imagePath }}"
+          [src]="recipe.imagePath"
           alt=""
           class="img-responsive"
-          style="max-height: 250px"
+          style="max-height: 80px"
         />
       </span>
     </a>
