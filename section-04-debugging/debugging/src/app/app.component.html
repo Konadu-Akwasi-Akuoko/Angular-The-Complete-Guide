@@ -5,10 +5,17 @@
       <button class="btn btn-primary" (click)="onAddServer()">Add Server</button>
       <br><br>
       <ul class="list-group">
-        <li
+        <!-- <li
           class="list-group-item"
           *ngFor="let server of servers; let i = index"
-          (click)="onRemoveServer(i)">{{ server }}</li>
+          (click)="onRemoveServer(i)">{{ server }}</li> -->
+
+          @for (server of servers; track $index){
+            <li
+              class="list-group-item"
+              (click)="onRemoveServer($index)">{{ server }}</li>
+          }
+          
       </ul>
     </div>
   </div>
