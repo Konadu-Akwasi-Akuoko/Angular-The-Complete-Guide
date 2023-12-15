@@ -443,3 +443,4 @@ In this case, the content between the `app-server-element` tags (`<strong style=
 - **ngAfterViewInit** - Called after the component’s view (and child views) has been initialized
 - **ngAfterViewChecked** - Called every time the view (and child views) have been checked
 - **ngOnDestroy** - Called once the component is about to be destroyed
+ 

@@ -4,8 +4,14 @@
 
   <div class="row">
     <div class="col-xs-12">
+      <button type="button" class="btn btn-primary" (click)="onChangeFirst()">
+        Change first Element
+      </button>
+      <button type="button" class="btn btn-danger" (click)="onDestroyFirst()">
+        Change first Element
+      </button>
       @for (element of serverElements; track $index) {
-      <app-server-element [srvElement]="element">
+      <app-server-element [name]="element.name">
         @if (element.type === 'server') {
         <strong style="color: red">{{ element.content }}</strong>
         } @else {

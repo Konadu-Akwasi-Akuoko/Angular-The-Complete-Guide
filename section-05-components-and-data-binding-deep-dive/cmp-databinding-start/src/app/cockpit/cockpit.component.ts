@@ -32,8 +32,8 @@ export class CockpitComponent {
     // serverName: HTMLInputElement;
     serverContent: HTMLInputElement;
   }) {
-    console.log('severName: ', this.serverName.nativeElement.value);
-    console.log('serverContent: ', serverContent);
+    // console.log('severName: ', this.serverName.nativeElement.value);
+    // console.log('serverContent: ', serverContent);
     this.onCreateServer.emit({
       server: server,
       name: this.serverName.nativeElement.value,
