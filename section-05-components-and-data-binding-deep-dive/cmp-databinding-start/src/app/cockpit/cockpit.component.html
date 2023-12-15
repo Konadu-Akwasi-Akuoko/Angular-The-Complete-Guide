@@ -8,7 +8,7 @@
     <!-- <input type="text" class="form-control" [(ngModel)]="newServerContent" /> -->
     <input type="text" class="form-control" #serverContentInput />
     <br />
-    <button
+    <!-- <button
       class="btn btn-primary"
       (click)="
         onAddServer({
@@ -19,13 +19,35 @@
       "
     >
       Add Server
-    </button>
+    </button> -->
     <button
+      class="btn btn-primary"
+      (click)="
+        onAddServer({
+          server: 'server',
+          serverContent: serverContentInput
+        })
+      "
+    >
+      Add Server
+    </button>
+    <!-- <button
       class="btn btn-primary"
       (click)="
         onAddServer({
           server: 'blueprint',
           serverName: serverNameInput,
+          serverContent: serverContentInput
+        })
+      "
+    >
+      Add Server Blueprint
+    </button> -->
+    <button
+      class="btn btn-primary"
+      (click)="
+        onAddServer({
+          server: 'blueprint',
           serverContent: serverContentInput
         })
       "

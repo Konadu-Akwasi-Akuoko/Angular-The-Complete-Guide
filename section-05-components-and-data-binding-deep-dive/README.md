@@ -344,3 +344,49 @@ onAddServer({
 Here, the `onAddServer` method takes an object with `server`, `serverName`, and `serverContent` properties. This method emits an event with the same object, which can be listened to by a parent component.
 
 In summary, local references in Angular provide a way to access DOM properties within your templates. They can be used to get the values of form fields, to call methods on child components, or even to access the child components themselves.
+
+## `@ViewChild` in Angular
+
+The `@ViewChild` decorator in Angular is used to access a child component, directive, or a DOM element from a parent component class or an attached component. It can also be used to interact with child components or to use methods from child components.
+
+In your `cockpit.component.ts` file, you have used `@ViewChild` to get a reference to an input element in your `cockpit.component.html` file.
+
+```typescript
+@ViewChild('serverNameInput')
+serverName: ElementRef<HTMLInputElement>;
+```
+
+Here, `'serverNameInput'` is a template reference variable defined in your `cockpit.component.html` file:
+
+```html
+<input type="text" class="form-control" #serverNameInput />
+```
+
+The `#serverNameInput` is a reference to the input element, and you can use this reference in your component class to access the properties of this input element. Like this:
+
+```TypeScript
+@ViewChild('serverNameInput')
+serverName: ElementRef<HTMLInputElement>;
+
+ onAddServer({
+    server,
+    // serverName,
+    serverContent,
+  }: {
+    server: 'server' | 'blueprint';
+    // serverName: HTMLInputElement;
+    serverContent: HTMLInputElement;
+  }) {
+    console.log('severName: ', this.serverName.nativeElement.value);
+    console.log('serverContent: ', serverContent);
+    this.onCreateServer.emit({
+      server: server,
+      name: this.serverName.nativeElement.value,
+      content: serverContent.value,
+    });
+  }
+```
+
+The `{strict: true}` option in `@ViewChild` is used to specify whether Angular should enforce stricter type checking. If `{strict: true}` is set, Angular will initialize the property with `undefined` and it will always be `undefined` if the query matches no elements. If `{strict: false}` is set (or not set at all, as `false` is the default), Angular will still initialize the property with `undefined`, but it will be set to `null` if the query matches no elements.
+
+This can be useful if you want to ensure that a child component or DOM element is always available in your parent component. If it's not, Angular will throw an error, helping you catch potential bugs in your code.
