@@ -387,7 +387,7 @@ serverName: ElementRef<HTMLInputElement>;
   }
 ```
 
-The `{strict: true}` option in `@ViewChild` is used to specify whether Angular should enforce stricter type checking. If `{strict: true}` is set, Angular will initialize the property with `undefined` and it will always be `undefined` if the query matches no elements. If `{strict: false}` is set (or not set at all, as `false` is the default), Angular will still initialize the property with `undefined`, but it will be set to `null` if the query matches no elements.
+The `{strict: true}` option in `@ViewChild` is used to specify whether Angular should enforce stricter type checking. If `{strict: true}` is set, Angular will initialize the property with `undefined` and it will always be `undefined` if the query matches no elements. If `{strict: false}` is set (or not set at all, as `false` is the default), Angular will still initialize the property with `undefined`, but it will be set to `null` if the query matches no elements. But you can always access the value in your component with the `onAfterViewInit()` lifecycle hook, without setting the property `strict`.
 
 This can be useful if you want to ensure that a child component or DOM element is always available in your parent component. If it's not, Angular will throw an error, helping you catch potential bugs in your code.
 
@@ -432,3 +432,14 @@ In your `app.component.html` file, you use the `server-element` component and pr
 ```
 
 In this case, the content between the `app-server-element` tags (`<strong style="color: red">{{ element.content }}</strong>` or `<em>{{ element.content }}</em>`) will be projected into the `ng-content` slot in the `server-element.component.html` file.
+
+## Angular lifecycle hooks
+
+- **ngOnChanges** - Called after a bound input property changes
+- **ngOnInit** - Called once the component is initialized
+- **ngDoCheck** - Called during every change detection run
+- **ngAfterContentInit** - Called after content (ng-content) has been projected into view
+- **ngAfterContentChecked** - Called every time the projected content has been checked
+- **ngAfterViewInit** - Called after the component’s view (and child views) has been initialized
+- **ngAfterViewChecked** - Called every time the view (and child views) have been checked
+- **ngOnDestroy** - Called once the component is about to be destroyed
