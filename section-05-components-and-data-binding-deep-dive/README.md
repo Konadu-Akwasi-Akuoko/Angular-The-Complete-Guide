@@ -194,3 +194,31 @@ onCreateServer({
 ```
 
 So, in summary, `$event` is used to capture the data emitted by an event in the parent component.
+
+## Assigning alias to custom events
+
+In Angular, you can assign an alias to custom events using the `@Output()` decorator. This can be useful when you want the event name in the template to be different from the property name in the component class.
+
+Here's how you can do it:
+
+In your `cockpit.component.ts` file, you can assign an alias to the `onCreateServer` event like this:
+
+```typescript
+@Output('serverCreated') onCreateServer = new EventEmitter<{
+  server: string;
+  name: string;
+  content: string;
+}>();
+```
+
+In this case, `serverCreated` is the alias for the `onCreateServer` event.
+
+Then, in your `app.component.html` file, you can listen for the `serverCreated` event instead of `onCreateServer`:
+
+```html
+<app-cockpit (serverCreated)="onCreateServer($event)" />
+```
+
+Now, whenever the `onCreateServer` event is emitted in the `cockpit.component.ts` file, the `onCreateServer` method in the `app.component.ts` file will be called, just like before. The difference is that in the template, you're using the `serverCreated` alias instead of the original `onCreateServer` name.
+
+This can be useful for improving readability or avoiding naming conflicts.

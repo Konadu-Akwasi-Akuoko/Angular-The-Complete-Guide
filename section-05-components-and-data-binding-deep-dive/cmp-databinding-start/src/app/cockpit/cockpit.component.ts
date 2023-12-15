@@ -6,7 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './cockpit.component.css',
 })
 export class CockpitComponent {
-  @Output() onCreateServer = new EventEmitter<{
+  @Output("serverCreated") onCreateServer = new EventEmitter<{
     server: string;
     name: string;
     content: string;
