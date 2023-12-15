@@ -2,11 +2,7 @@
   <div class="panel-heading">{{ element.name }}</div>
   <div class="panel-body">
     <p>
-      @if (element.type === 'server') {
-      <strong style="color: red">{{ element.content }}</strong>
-      } @else {
-      <em>{{ element.content }}</em>
-      }
+      <ng-content />
     </p>
   </div>
 </div>

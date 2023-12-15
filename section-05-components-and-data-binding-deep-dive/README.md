@@ -390,3 +390,45 @@ serverName: ElementRef<HTMLInputElement>;
 The `{strict: true}` option in `@ViewChild` is used to specify whether Angular should enforce stricter type checking. If `{strict: true}` is set, Angular will initialize the property with `undefined` and it will always be `undefined` if the query matches no elements. If `{strict: false}` is set (or not set at all, as `false` is the default), Angular will still initialize the property with `undefined`, but it will be set to `null` if the query matches no elements.
 
 This can be useful if you want to ensure that a child component or DOM element is always available in your parent component. If it's not, Angular will throw an error, helping you catch potential bugs in your code.
+
+## Projecting content into components with `ng-content`
+
+`ng-content` is a built-in Angular directive that allows you to create "slots" in your Angular components where you can insert HTML content. This is a form of content projection (or transclusion in AngularJS terms), which is a way to import HTML content from outside the component and insert that content into the component's template in a designated spot.
+
+In your `server-element.component.html` file, you have `<ng-content />` on line 5. This is where the projected content will be inserted.
+
+```html
+<div class="panel panel-default">
+  <div class="panel-heading">{{ element.name }}</div>
+  <div class="panel-body">
+    <p>
+      <ng-content />
+    </p>
+  </div>
+</div>
+```
+
+In your `app.component.html` file, you use the `server-element` component and provide content between the opening and closing tags of the `server-element` component. This content will be projected into the `ng-content` slot of the `server-element` component.
+
+```html
+<div class="container">
+  <app-cockpit (serverCreated)="onCreateServer($event)" />
+  <hr />
+
+  <div class="row">
+    <div class="col-xs-12">
+      @for (element of serverElements; track $index) {
+      <app-server-element [srvElement]="element">
+        @if (element.type === 'server') {
+        <strong style="color: red">{{ element.content }}</strong>
+        } @else {
+        <em>{{ element.content }}</em>
+        }
+      </app-server-element>
+      }
+    </div>
+  </div>
+</div>
+```
+
+In this case, the content between the `app-server-element` tags (`<strong style="color: red">{{ element.content }}</strong>` or `<em>{{ element.content }}</em>`) will be projected into the `ng-content` slot in the `server-element.component.html` file.
