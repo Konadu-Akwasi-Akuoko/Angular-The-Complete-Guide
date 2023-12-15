@@ -222,3 +222,75 @@ Then, in your `app.component.html` file, you can listen for the `serverCreated` 
 Now, whenever the `onCreateServer` event is emitted in the `cockpit.component.ts` file, the `onCreateServer` method in the `app.component.ts` file will be called, just like before. The difference is that in the template, you're using the `serverCreated` alias instead of the original `onCreateServer` name.
 
 This can be useful for improving readability or avoiding naming conflicts.
+
+## View encapsulation in Angular
+
+View Encapsulation in Angular is a feature that allows for the scoping of CSS styles to specific components. This means that the styles defined in a component's CSS file will only apply to that component's template, and won't affect other components in the application.
+
+Angular provides three strategies for View Encapsulation:
+
+1. **Emulated (default):** Styles are scoped to the component but still remain inside the global CSS. Angular achieves this by adding unique attributes to the HTML tags and adjusting the CSS selectors to match these attributes.
+
+2. **None:** Styles are not scoped and are globally available. Any styles applied in this component can affect the entire application.
+
+3. **ShadowDom:** Styles are scoped to the component and use the browser's native shadow DOM implementation to isolate styles. This encapsulation strategy is only available in browsers that support the shadow DOM API.
+
+You can set the encapsulation strategy in the `@Component` decorator like this:
+
+```typescript
+import { Component, ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None // or Emulated, ShadowDom
+})
+export class AppComponent {
+  // ...
+}
+```
+
+Remember that the choice of encapsulation strategy can have significant effects on how your styles are applied and should be chosen based on the needs of your project.
+
+Let's use the `app.component.ts` and `app.component.css` files to explain view encapsulation.
+
+In your `app.component.ts` file, you have set the encapsulation strategy to `ViewEncapsulation.None`:
+
+```typescript
+import { Component, ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None,
+})
+export class AppComponent {
+  // ...
+}
+```
+
+This means that the styles defined in `app.component.css` will not be scoped to the `AppComponent` only, but will be globally available to the entire application. Any styles defined in `app.component.css` can affect other components in your application.
+
+Now, let's look at your `app.component.css` file:
+
+```css
+.container {
+  margin-top: 30px;
+}
+
+p {
+  color: blue;
+}
+```
+
+With `ViewEncapsulation.None`, these styles will be applied globally. So, any `<p>` tag in your application, not just in `AppComponent`, will have the color blue. Similarly, any element with the class `.container` in your application will have a top margin of 30px.
+
+If you had set the encapsulation to `ViewEncapsulation.Emulated` (the default), these styles would only apply to `AppComponent`. Angular would achieve this by adding unique attributes to the HTML tags in the `AppComponent` template and adjusting the CSS selectors in `app.component.css` to match these attributes.
+
+If you had set the encapsulation to `ViewEncapsulation.ShadowDom`, Angular would use the browser's native shadow DOM to isolate the styles to `AppComponent`. This would also make the styles only apply to `AppComponent`, but this strategy is only available in browsers that support the shadow DOM API.
+
+## Using local references in templates
+
+
