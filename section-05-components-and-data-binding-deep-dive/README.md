@@ -293,4 +293,54 @@ If you had set the encapsulation to `ViewEncapsulation.ShadowDom`, Angular would
 
 ## Using local references in templates
 
+In Angular, local references (also known as template reference variables) are a way to access DOM properties within your templates. They are defined using the `#` symbol in your HTML.
 
+Let's look at the `cockpit.component.html` file:
+
+```html
+<input type="text" class="form-control" #serverNameInput />
+<input type="text" class="form-control" #serverContentInput />
+```
+
+Here, `#serverNameInput` and `#serverContentInput` are local references. They hold a reference to their respective `<input>` elements.
+
+You can use these local references anywhere inside the same template. For example, you can pass the value of the input field to a method when a button is clicked:
+
+```html
+<button
+  class="btn btn-primary"
+  (click)="onAddServer({
+    server: 'server',
+    serverName: serverNameInput.value,
+    serverContent: serverContentInput.value
+  })"
+>
+  Add Server
+</button>
+```
+
+In this case, when the button is clicked, the `onAddServer` method is called with an object. The `serverName` and `serverContent` properties of this object are set to the values of the `serverNameInput` and `serverContentInput` input fields, respectively.
+
+Now, let's look at your `cockpit.component.ts` file:
+
+```typescript
+onAddServer({
+  server,
+  serverName,
+  serverContent,
+}: {
+  server: 'server' | 'blueprint';
+  serverName: string;
+  serverContent: string;
+}) {
+  this.onCreateServer.emit({
+    server: server,
+    name: serverName,
+    content: serverContent,
+  });
+}
+```
+
+Here, the `onAddServer` method takes an object with `server`, `serverName`, and `serverContent` properties. This method emits an event with the same object, which can be listened to by a parent component.
+
+In summary, local references in Angular provide a way to access DOM properties within your templates. They can be used to get the values of form fields, to call methods on child components, or even to access the child components themselves.
