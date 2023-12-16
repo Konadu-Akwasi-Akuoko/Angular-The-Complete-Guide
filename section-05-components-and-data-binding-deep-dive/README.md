@@ -347,13 +347,12 @@ In summary, local references in Angular provide a way to access DOM properties w
 
 ## `@ViewChild` in Angular
 
-The `@ViewChild` decorator in Angular is used to access a child component, directive, or a DOM element from a parent component class or an attached component. It can also be used to interact with child components or to use methods from child components.
+The `@ViewChild` decorator in Angular is used to access a a DOM element from an attached template inside your component. It can also be used to interact with child components or to use methods from child components.
 
 In your `cockpit.component.ts` file, you have used `@ViewChild` to get a reference to an input element in your `cockpit.component.html` file.
 
 ```typescript
-@ViewChild('serverNameInput')
-serverName: ElementRef<HTMLInputElement>;
+@ViewChild('serverNameInput') serverName: ElementRef<HTMLInputElement>;
 ```
 
 Here, `'serverNameInput'` is a template reference variable defined in your `cockpit.component.html` file:
@@ -365,8 +364,7 @@ Here, `'serverNameInput'` is a template reference variable defined in your `cock
 The `#serverNameInput` is a reference to the input element, and you can use this reference in your component class to access the properties of this input element. Like this:
 
 ```TypeScript
-@ViewChild('serverNameInput')
-serverName: ElementRef<HTMLInputElement>;
+@ViewChild('serverNameInput') serverName: ElementRef<HTMLInputElement>;
 
  onAddServer({
     server,
@@ -443,4 +441,31 @@ In this case, the content between the `app-server-element` tags (`<strong style=
 - **ngAfterViewInit** - Called after the component’s view (and child views) has been initialized
 - **ngAfterViewChecked** - Called every time the view (and child views) have been checked
 - **ngOnDestroy** - Called once the component is about to be destroyed
- 
+
+## Getting access to `ng-content` with `@ContentChild`
+
+`@ContentChild` is a decorator in Angular component files that allows you to get the first element(content children) or the directive matching the selector from the parent's content DOM.
+
+Content children are elements that are put between the opening and closing tags of your custom Angular component in the parent component's template.
+
+In the `server-element.component.ts` file, you can see `@ContentChild` being used:
+
+```typescript
+@ContentChild('contentParagraph', { static: true }) paragraph: ElementRef<HTMLElement>;
+```
+
+Here, `@ContentChild` is used to get a reference to the first element in the content DOM that uses the `contentParagraph` template reference variable. The `{ static: true }` option means that the query result will be available in the `ngOnInit` lifecycle hook.
+
+In the `app.component.html` file, you can see the `contentParagraph` template reference variable being used:
+
+```html
+<app-server-element [name]="element.name">
+  <p #contentParagraph>
+    <!-- content here -->
+  </p>
+</app-server-element>
+```
+
+Here, the `#contentParagraph` is the template reference variable. The content inside the `<app-server-element>` tags is the content DOM for the `app-server-element` component. The `@ContentChild` decorator in the `server-element.component.ts` file will get a reference to the `<p>` element with the `contentParagraph` template reference variable.
+
+This allows the `ServerElementComponent` to access the content of the `<p>` tag from the parent component's template. This is useful when you want to project content into your components and have those components interact with that content.

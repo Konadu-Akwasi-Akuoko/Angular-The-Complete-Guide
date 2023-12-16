@@ -8,15 +8,17 @@
         Change first Element
       </button>
       <button type="button" class="btn btn-danger" (click)="onDestroyFirst()">
-        Change first Element
+        Destroy first Element
       </button>
       @for (element of serverElements; track $index) {
       <app-server-element [name]="element.name">
-        @if (element.type === 'server') {
-        <strong style="color: red">{{ element.content }}</strong>
-        } @else {
-        <em>{{ element.content }}</em>
-        }
+        <p #contentParagraph>
+          @if (element.type === 'server') {
+          <strong style="color: red">{{ element.content }}</strong>
+          } @else {
+          <em>{{ element.content }}</em>
+          }
+        </p>
       </app-server-element>
       }
     </div>
