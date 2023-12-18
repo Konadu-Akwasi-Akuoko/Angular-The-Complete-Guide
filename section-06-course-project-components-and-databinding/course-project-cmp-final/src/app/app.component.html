@@ -1,9 +1,12 @@
-<app-header></app-header>
+<app-header (onSwitchRoute)="switchRoute($event)" [activeHeaderComponent]="activeRoute" ></app-header>
 <div class="container">
   <div class="row">
     <div class="col-md-12">
+      @if (activeRoute === "app-recipes"){
       <app-recipes></app-recipes>
+      } @else {
       <app-shopping-list></app-shopping-list>
+      }
     </div>
   </div>
 </div>
