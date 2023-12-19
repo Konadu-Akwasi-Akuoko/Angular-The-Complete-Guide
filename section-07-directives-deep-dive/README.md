@@ -171,3 +171,137 @@ In Angular, the `ngOnInit` lifecycle hook is a callback method that is called on
 </details>
 
 ## Using `HostListener` to listen to host events
+
+The `@HostListener` is a decorator in Angular that declares a DOM event to listen for and provides a handler method to run when that event occurs. It's part of Angular's event binding feature, which allows you to respond to any DOM event.
+
+The syntax is as follows:
+
+```typescript
+@HostListener('event_name') methodName(args) {...}
+```
+
+- `event_name`: The name of the DOM event to which you want to respond.
+- `methodName`: The method to call when the event occurs.
+- `args`: Optional argument(s) to pass into the handler method.
+
+The `@HostListener` decorator is useful for handling events directly from the host element of the directive. This makes your code more modular and reusable, as the directive encapsulates the event handling logic.
+
+In your `better-highlight.directive.ts` file, you're using `@HostListener` to listen for `mouseenter` and `mouseleave` events:
+
+```typescript
+@HostListener('mouseenter') mouseover(eventData: Event) {
+  this.renderer.setStyle(
+    this.elementRef.nativeElement,
+    'background-color',
+    'blue'
+  );
+  this.renderer.setStyle(this.elementRef.nativeElement, 'color', 'white');
+}
+
+@HostListener('mouseleave') mouseleave(eventData: Event) {
+  this.renderer.setStyle(
+    this.elementRef.nativeElement,
+    'background-color',
+    'transparent'
+  );
+  this.renderer.setStyle(this.elementRef.nativeElement, 'color', 'black');
+}
+```
+
+In this example, when the mouse enters the host element, the `mouseover` method is called, changing the background color to blue and the text color to white. When the mouse leaves the host element, the `mouseleave` method is called, changing the background color to transparent and the text color to black.
+
+In your `app.component.html` file, you're using the `appBetterHighlight` directive:
+
+```html
+<p appBetterHighlight>Style me with better directive</p>
+```
+
+In this case, the `p` element is the host of the `appBetterHighlight` directive. When you hover over this paragraph, it will change its background color to blue and its text color to white due to the `mouseover` method in the directive. When you move the mouse away, it will change its background color to transparent and its text color to black due to the `mouseleave` method.
+
+And no, the `@HostListener` decorator is not limited to directive classes. It can also be used in component classes in Angular.
+
+When used in a component, `@HostListener` will listen for events on the component's host element. Here's an example:
+
+```typescript
+import { Component, HostListener } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  template: `<p>Move your mouse over this paragraph.</p>`
+})
+export class ExampleComponent {
+  @HostListener('mouseenter') onMouseEnter() {
+    console.log('Mouse entered');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    console.log('Mouse left');
+  }
+}
+```
+
+In this example, the `ExampleComponent` listens for `mouseenter` and `mouseleave` events on its host element. When the mouse enters or leaves the area of the paragraph, the corresponding method is called, logging a message to the console.
+
+## Using `HostBinding` to bind to host properties
+
+The `@HostBinding` decorator in Angular is used to bind a host element property (the element where the directive is applied) to a directive property. This allows you to change properties of the element from within the directive.
+
+The syntax is as follows:
+
+```typescript
+@HostBinding('property_name') directivePropertyName;
+```
+
+- `property_name`: The name of the host element's property you want to bind.
+- `directivePropertyName`: The name of the directive's property.
+
+The `@HostBinding` decorator is important because it provides a way to change the properties of the host element directly from the directive, making your code more modular and reusable.
+
+In your `better-highlight.directive.ts` file, you're using `@HostBinding` to bind the `style.backgroundColor` property of the host element to the `backgroundColor` property of the directive:
+
+```typescript
+@HostBinding('style.backgroundColor') backgroundColor: string = 'transparent';
+```
+
+This means that whenever the `backgroundColor` property of the directive changes, the `style.backgroundColor` property of the host element will also change.
+
+For example, in the `mouseover` and `mouseleave` methods, you're changing the `backgroundColor` property:
+
+```typescript
+@HostListener('mouseenter') mouseover(eventData: Event) {
+  this.backgroundColor = 'blue';
+}
+
+@HostListener('mouseleave') mouseleave(eventData: Event) {
+  this.backgroundColor = 'transparent';
+}
+```
+
+When the mouse enters the host element, the `backgroundColor` property is set to 'blue', which changes the background color of the host element to blue. When the mouse leaves the host element, the `backgroundColor` property is set to 'transparent', which changes the background color of the host element to transparent.
+
+## Binding to directive properties
+
+Binding to directive properties in Angular allows you to pass values from the parent context (like a component) into the directive. This is done using the `@Input` decorator in the directive.
+
+This is important because it allows for reusability and configurability of directives. Instead of hardcoding values within the directive, you can pass them in as inputs, making the directive more flexible and reusable in different contexts.
+
+In your `better-highlight.directive.ts` file, you have two properties bound using the `@Input` decorator:
+
+```typescript
+@Input() defaultColor: string = 'transparent';
+@Input('appBetterHighlight') highlightColor: string = 'blue';
+```
+
+The `defaultColor` property is bound to the `defaultColor` attribute of the host element, and the `highlightColor` property is bound to the `appBetterHighlight` attribute of the host element.
+
+In your `app.component.html` file, you're using the `appBetterHighlight` directive and passing in values for `defaultColor` and `appBetterHighlight`:
+
+```html
+<p [appBetterHighlight]="'red'" [defaultColor]="'yellow'">
+  Style me with better directive
+</p>
+```
+
+In this case, the `defaultColor` is set to 'yellow', and the `highlightColor` (which is aliased as `appBetterHighlight`) is set to 'red'. These values are passed into the directive and used to set the background color of the paragraph element when the mouse enters or leaves it.
+
+This makes your work easier because you can reuse the `appBetterHighlight` directive in different contexts with different colors. You just need to pass in the desired colors as inputs when you use the directive.
