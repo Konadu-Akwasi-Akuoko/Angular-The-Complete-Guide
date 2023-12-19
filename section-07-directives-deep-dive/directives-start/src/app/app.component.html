@@ -7,7 +7,7 @@
       <br /><br />
       <ul class="list-group">
         <div>
-          @if (onlyOdd) { @for (number of oddNumbers; track $index) {
+          <!-- @if (onlyOdd) { @for (number of oddNumbers; track $index) {
           <li
             class="list-group-item"
             [ngClass]="{ odd: onlyOdd }"
@@ -23,7 +23,17 @@
           >
             {{ number }}
           </li>
-          } }
+          } } -->
+          @for (number of evenNumbers; track $index) {
+          <li
+            *appUnless="onlyOdd"
+            class="list-group-item"
+            [ngClass]="{ odd: onlyOdd }"
+            [ngStyle]="{ backgroundColor: onlyOdd ? 'yellow' : 'transparent' }"
+          >
+            {{ number }}
+          </li>
+          }
         </div>
       </ul>
       <p appBasicHighlight>Style me with basic directive</p>
