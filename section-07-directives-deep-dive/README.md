@@ -486,3 +486,61 @@ In your Angular code, you're using `set` in the `appUnless` directive:
 In this case, `appUnless` is a setter for an `@Input` property. When the `appUnless` property is set in a parent component, the setter method is called, allowing you to run additional code (like checking the condition and manipulating the DOM).
 
 </details>
+
+## Understanding `ngSwitch` or `@switch` directive
+
+The `ngSwitch` directive in Angular is a structural directive that adds or removes templates (subtrees of the component tree) when the expression's value changes. It's similar to the switch statement in JavaScript.
+
+Here's how you use it:
+
+```html
+<div [ngSwitch]="value">
+  <p *ngSwitchCase="'case1'">Case 1</p>
+  <p *ngSwitchCase="'case2'">Case 2</p>
+  <p *ngSwitchDefault>Default case</p>
+</div>
+```
+
+- `[ngSwitch]="value"`: Binds `value` to `ngSwitch`. When `value` changes, Angular selects the first `ngSwitchCase` that matches the value, or the `ngSwitchDefault` if no match is found.
+- `*ngSwitchCase="'case1'"`: Defines a case. If `value` equals `'case1'`, this template is added to the DOM.
+- `*ngSwitchDefault`: Defines the default case. If no `ngSwitchCase` matches `value`, this template is added to the DOM.
+
+In your `app.component.html` file, you're using `ngSwitch` to display different paragraphs based on the `value` property:
+
+```html
+<div [ngSwitch]="value" style="background-color: antiquewhite">
+  <p *ngSwitchCase="5">The value is 5</p>
+  <p *ngSwitchCase="10">The value is 10</p>
+  <p *ngSwitchCase="15">The value is 15</p>
+  <p *ngSwitchCase="20">The value is 20</p>
+  <p *ngSwitchDefault>The value is not in the switch cases</p>
+</div>
+```
+
+In your `app.component.ts` file, `value` is a property of the `AppComponent` class:
+
+```typescript
+export class AppComponent {
+  value = 10;
+}
+```
+
+In this case, when `value` is 5, 10, 15, or 20, the corresponding paragraph is displayed. If `value` is anything else, the default paragraph ("The value is not in the switch cases") is displayed.
+
+In Angular 17 the above can be achieved by doing the following:
+
+```HTML
+<div>
+    @switch (value) { @case (5) {
+    <p>The value is 5</p>
+    } @case (10) {
+    <p>The value is 10</p>
+    } @case (15) {
+    <p>The value is 15</p>
+    } @case (20) {
+    <p>The value is 20</p>
+    } @default {
+    <p>The value is not in the switch cases</p>
+    } }
+</div>
+```

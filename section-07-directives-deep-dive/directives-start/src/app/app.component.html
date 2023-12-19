@@ -40,6 +40,25 @@
       <p [appBetterHighlight]="'red'" [defaultColor]="'yellow'">
         Style me with better directive
       </p>
+      @switch (value) { @case (5) {
+      <p>The value is 5</p>
+      } @case (10) {
+      <p>The value is 10</p>
+      } @case (15) {
+      <p>The value is 15</p>
+      } @case (20) {
+      <p>The value is 20</p>
+      } @default {
+      <p>The value is not in the switch cases</p>
+      } }
+      <!-- Old way of doing it -->
+      <div [ngSwitch]="value" style="background-color: antiquewhite">
+        <p *ngSwitchCase="5">The value is 5</p>
+        <p *ngSwitchCase="10">The value is 10</p>
+        <p *ngSwitchCase="15">The value is 15</p>
+        <p *ngSwitchCase="20">The value is 20</p>
+        <p *ngSwitchDefault>The value is not in the switch cases</p>
+      </div>
     </div>
   </div>
 </div>
