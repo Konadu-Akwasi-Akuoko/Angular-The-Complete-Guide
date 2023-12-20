@@ -539,8 +539,74 @@ In Angular 17 the above can be achieved by doing the following:
     <p>The value is 15</p>
     } @case (20) {
     <p>The value is 20</p>
-    } @default {
+    } @default {e
     <p>The value is not in the switch cases</p>
     } }
 </div>
 ```
+
+## Examples of using both `@HostBinding` and `@HostListener`
+
+### Example 1
+
+Directives in Angular are a way to add behavior to elements in the DOM. There are three kinds of directives in Angular:
+
+1. **Components**—directives with a template.
+2. **Attribute directives**—change the appearance or behavior of an element, component, or another directive.
+3. **Structural directives**—change the DOM layout by adding and removing DOM elements.
+
+In your case, you've created an attribute directive called `DropdownDirective` *(check the section-08 codes)*. Let's break down how it works.
+
+First, you import the necessary Angular core decorators:
+
+```typescript
+import { Directive, ElementRef, HostBinding, HostListener, Renderer2 } from '@angular/core';
+```
+
+- `Directive` is a decorator function that marks a class as an Angular directive and provides configuration metadata.
+- `ElementRef` is a wrapper around a native element inside of a View.
+- `HostBinding` is a decorator that binds a host element property (here, the class property) to a directive/host property.
+- `HostListener` is a decorator that declares a DOM event to listen for and provides a handler method to run when that event occurs.
+- `Renderer2` is a service that provides an API for UI manipulations.
+
+Next, you define the directive:
+
+```typescript
+@Directive({
+  selector: '[appDropdown]'
+})
+```
+
+The `@Directive` decorator is used to define a directive. The `selector` property defines the name of the attribute you'll use to apply this directive in your HTML.
+
+Then, you define the directive's class:
+
+```typescript
+export class DropdownDirective {
+  @HostBinding('class.open') isOpen = false;
+
+  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('click') toggleOpen() {
+    this.isOpen = !this.isOpen;
+    let dropdownMenu = this.elementRef.nativeElement.querySelector('.dropdown-menu');
+    if (dropdownMenu) {
+      this.isOpen ? this.renderer.setStyle(dropdownMenu, 'display', 'block') : this.renderer.setStyle(dropdownMenu, 'display', 'none');
+    }
+  }
+}
+```
+
+- `@HostBinding('class.open') isOpen = false;` binds the `open` class to the `isOpen` property. When `isOpen` is `true`, the `open` class is added to the host element; when `isOpen` is `false`, the `open` class is removed.
+- The `constructor` initializes the `ElementRef` and `Renderer2` instances.
+- `@HostListener('click') toggleOpen()` is a method that gets called whenever a click event is fired on the host element. Inside this method, the `isOpen` property is toggled between `true` and `false`, which in turn adds or removes the `open` class from the host element. It also toggles the `display` style of the `dropdown-menu` child element between `block` and `none`.
+
+Finally, you apply the directive to an element in your HTML:
+
+```html
+<div class="btn-group dropdown" appDropdown>
+  <!-- ... -->
+</div>
+```
+
+By adding `appDropdown` to the element, you're applying the `DropdownDirective` to that element. Now, when you click on this element, it will toggle the `open` class and the `display` style of the `dropdown-menu` child element.
