@@ -30,7 +30,7 @@ dependencies:
     specifier: ^17.0.0
     version: 17.0.6(@angular/common@17.0.6)(@angular/core@17.0.6)(@angular/platform-browser@17.0.6)(rxjs@7.8.1)
   bootstrap:
-    specifier: '3.3'
+    specifier: 3.3.7
     version: 3.3.7
   rxjs:
     specifier: ~7.8.0
@@ -2798,7 +2798,7 @@ packages:
   /axios@0.21.4(debug@4.3.2):
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.3(debug@4.3.2)
+      follow-redirects: 1.15.4(debug@4.3.2)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -4099,8 +4099,8 @@ packages:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
 
-  /follow-redirects@1.15.3(debug@4.3.2):
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
+  /follow-redirects@1.15.4(debug@4.3.2):
+    resolution: {integrity: sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -4429,7 +4429,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.3(debug@4.3.2)
+      follow-redirects: 1.15.4(debug@4.3.2)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
