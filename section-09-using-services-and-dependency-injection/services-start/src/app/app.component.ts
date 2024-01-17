@@ -12,11 +12,11 @@ export class AppComponent {
 
   accounts = this.account.accounts;
 
-  onAccountAdded(newAccount: { name: string; status: string }) {
-    this.account.addAccount(newAccount.name, newAccount.status);
-  }
+  // onAccountAdded(newAccount: { name: string; status: string }) {
+  //   this.account.addAccount(newAccount.name, newAccount.status);
+  // }
 
-  onStatusChanged(updateInfo: { id: number; newStatus: string }) {
-    this.account.updateStatus(updateInfo.id, updateInfo.newStatus);
-  }
+  // onStatusChanged(updateInfo: { id: number; newStatus: string }) {
+  //   this.account.updateStatus(updateInfo.id, updateInfo.newStatus);
+  // }
 }

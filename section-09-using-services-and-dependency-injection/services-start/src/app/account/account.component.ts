@@ -6,15 +6,15 @@ import { AccountsService } from '../accounts.service';
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  providers: [LoggingService, AccountsService],
+  providers: [LoggingService],
 })
 export class AccountComponent {
   @Input() account: { name: string; status: string };
   @Input() id: number;
-  @Output() statusChanged = new EventEmitter<{
-    id: number;
-    newStatus: string;
-  }>();
+  // @Output() statusChanged = new EventEmitter<{
+  //   id: number;
+  //   newStatus: string;
+  // }>();
 
   constructor(
     private loggingService: LoggingService,

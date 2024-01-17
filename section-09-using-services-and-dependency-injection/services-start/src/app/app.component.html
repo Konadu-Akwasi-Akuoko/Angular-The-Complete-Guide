@@ -1,16 +1,10 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
-      <app-new-account
-        (accountAdded)="onAccountAdded($event)"
-      ></app-new-account>
+      <app-new-account></app-new-account>
       <hr />
       @for (account of accounts; let i = $index; track i) {
-      <app-account
-        [account]="account"
-        [id]="i"
-        (statusChanged)="onStatusChanged($event)"
-      ></app-account>
+      <app-account [account]="account" [id]="i"></app-account>
       }
     </div>
   </div>

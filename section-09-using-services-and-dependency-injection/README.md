@@ -324,3 +324,72 @@ This means that when an instance of `AccountComponent` is created, Angular will 
 4. **Pipe Level**: Services can also be provided at the pipe level. Again, a new instance of the service is created for the pipe and all its child pipes.
 
 The hierarchy of DI ensures that the correct instance of a service is injected based on where the service is requested. This allows for a high degree of control over the lifecycle and scope of services in an Angular application.
+
+## How many instances of services should it be?
+
+The `providers` property of the `@Component` decorator in Angular is used to define the services that should be instantiated and made available to the component and its child components.
+
+When you provide a service at the component level (i.e., in the `providers` array of a `@Component`), a new instance of the service is created specifically for that component and all its child components. This means that the service is scoped to the component and its descendants. Any changes made to the service within this scope will not affect other instances of the service that might exist elsewhere in the application.
+
+On the other hand, when you provide a service at the root level (i.e., in the `providers` array of the `@NgModule`), a single instance of the service is created and shared across the entire application. This means that the service is a singleton and any changes made to the service will be reflected everywhere it is injected, **provided no instance of a child component adds it to it's providers array.**
+
+Here's an example to illustrate this:
+
+```typescript
+import { Component } from '@angular/core';
+import { MyService } from './my.service';
+
+@Component({
+ selector: 'my-component',
+ template: `<child-component></child-component>`,
+ providers: [MyService] // MyService is provided at the component level
+})
+export class MyComponent {
+ constructor(private myService: MyService) {
+   console.log(this.myService === this.myChildComponent.myService); // false
+ }
+}
+
+@Component({
+ selector: 'child-component',
+ template: ``,
+ providers: [MyService] // A new instance of MyService is instantiated here
+})
+export class ChildComponent {
+ constructor(private myService: MyService) {}
+}
+```
+
+In this example, `MyComponent` and `ChildComponent` provides `MyService` at the component level. Therefore, `MyComponent` and `ChildComponent` each get their own separate instance of `MyService`. As a result, the comparison `this.myService === this.myChildComponent.myService` returns `false`, indicating that they are indeed separate instances.
+
+If a service is provided in the `providers` array of a parent component, that service will be available to the parent component and all its child components.
+
+However, if a service is not provided in the `providers` array of a component, Angular will look up the component tree until it finds a component that provides the service. If it reaches the root component without finding a provider, it will throw an error.
+
+Here's an example to illustrate this:
+
+```typescript
+import { Component } from '@angular/core';
+import { MyService } from './my.service';
+
+@Component({
+ selector: 'parent-component',
+ template: `<child-component></child-component>`,
+ providers: [MyService] // MyService is provided at the parent component level
+})
+export class ParentComponent {
+ constructor(private myService: MyService) {}
+}
+
+@Component({
+ selector: 'child-component',
+ template: ``
+})
+export class ChildComponent {
+ constructor(private myService: MyService) {}
+}
+```
+
+In this example, `ParentComponent` provides `MyService` at the component level. Therefore, both `ParentComponent` and `ChildComponent` can inject `MyService` because they are part of the same component tree. And the `ChildComponent` can use the same instantiated version of `MyService` from it's parent component, that is `ParentComponent`.
+
+**NB: All in all, we can say that adding a new service to the providers array of a new component will tell Angular to instantiate a new service for the component and all it's children, even if it's parent is component is using that same dependency injection service, the child's instantiated one will override the parent's service.**
