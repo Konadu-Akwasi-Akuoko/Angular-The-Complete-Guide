@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { LoggingService } from './logging.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountsService {
-  constructor() {}
+  constructor(private loggingService: LoggingService) {}
 
   accounts = [
     {
@@ -23,10 +24,12 @@ export class AccountsService {
 
   addAccount(name: string, status: string) {
     this.accounts.push({ name: name, status: status });
+    this.loggingService.onCreateAccount(name, status);
   }
 
   updateStatus(id: number, newStatus: string) {
     console.log('updateStatus');
     this.accounts[id].status = newStatus;
+    this.loggingService.logStatusChange(id, newStatus);
   }
 }

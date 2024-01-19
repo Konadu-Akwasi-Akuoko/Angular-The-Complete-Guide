@@ -393,3 +393,41 @@ export class ChildComponent {
 In this example, `ParentComponent` provides `MyService` at the component level. Therefore, both `ParentComponent` and `ChildComponent` can inject `MyService` because they are part of the same component tree. And the `ChildComponent` can use the same instantiated version of `MyService` from it's parent component, that is `ParentComponent`.
 
 **NB: All in all, we can say that adding a new service to the providers array of a new component will tell Angular to instantiate a new service for the component and all it's children, even if it's parent is component is using that same dependency injection service, the child's instantiated one will override the parent's service.**
+
+- **Things to note:**
+  - `providedIn: 'root'` is the easiest and most efficient way to provide services since Angular 6:
+    - The service will be available application wide as a singleton with no need to add it to a module's providers array (like Angular <= 5).
+    - If the service is only used within a lazy loaded module it will be lazy loaded with that module
+    - If it is never used it will not be contained in the build (tree shaked).
+  - By the way:
+    - If you don't want a application-wide singleton use the provider's array of a component instead.
+    - If you want to limit the scope so no other developer will ever use your service outside of a particular module, use the providers array of NgModule instead.
+
+## Injecting services into services
+
+- **@Injectable Decorator**: The `@Injectable` decorator is used to mark a class as available to be provided and injected as a dependency. When you apply this decorator to a service, Angular knows that this service can be injected into other services or components.
+
+In your `accounts.service.ts` file, you have the `@Injectable` decorator applied to the `AccountsService` class:
+
+```typescript
+@Injectable({
+ providedIn: 'root',
+})
+export class AccountsService {
+ // ...
+}
+```
+
+This means that `AccountsService` can be injected into other services or components.
+
+- **Injecting Services**: To inject a service into another service, you add it as a parameter to the constructor of the service where you want to use it. In your `accounts.service.ts` file, you're injecting `LoggingService` into `AccountsService`:
+
+```typescript
+constructor(private loggingService: LoggingService) {}
+```
+
+This allows `AccountsService` to use the methods defined in `LoggingService`.
+
+If you don't add the `@Injectable` decorator to a service, Angular won't recognize it as a service that can be injected. This is because Angular uses the `@Injectable` decorator to generate metadata about the service, which includes information about its dependencies. Without this decorator, Angular wouldn't know how to create an instance of the service or how to inject it into other services or components.
+
+It's recommended to always use the `@Injectable` decorator for services because it provides important metadata that Angular needs to correctly handle dependency injection. It also makes your code clearer and easier to understand, because it explicitly indicates that a class is intended to be used as a service.

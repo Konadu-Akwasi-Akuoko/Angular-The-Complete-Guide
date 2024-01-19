@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoggingService } from '../logging.service';
+import { Component, Input } from '@angular/core';
 import { AccountsService } from '../accounts.service';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  providers: [LoggingService],
 })
 export class AccountComponent {
   @Input() account: { name: string; status: string };
@@ -17,7 +15,7 @@ export class AccountComponent {
   // }>();
 
   constructor(
-    private loggingService: LoggingService,
+    // private loggingService: LoggingService,
     private accountsService: AccountsService
   ) {}
 
@@ -29,7 +27,7 @@ export class AccountComponent {
     //     ', new status: ' +
     //     status
     // );
-    this.loggingService.logStatusChange(this.id, status);
+    // this.loggingService.logStatusChange(this.id, status);
     this.accountsService.updateStatus(this.id, status);
   }
 }
