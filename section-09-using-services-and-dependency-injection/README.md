@@ -431,3 +431,62 @@ This allows `AccountsService` to use the methods defined in `LoggingService`.
 If you don't add the `@Injectable` decorator to a service, Angular won't recognize it as a service that can be injected. This is because Angular uses the `@Injectable` decorator to generate metadata about the service, which includes information about its dependencies. Without this decorator, Angular wouldn't know how to create an instance of the service or how to inject it into other services or components.
 
 It's recommended to always use the `@Injectable` decorator for services because it provides important metadata that Angular needs to correctly handle dependency injection. It also makes your code clearer and easier to understand, because it explicitly indicates that a class is intended to be used as a service.
+
+## Using services for cross component communication
+
+In your `AccountsService`, you have an `EventEmitter` named `statusUpdated`. This `EventEmitter` emits an event whenever the status of an account is updated. Components can subscribe to this `EventEmitter` to react to status updates
+
+```typescript
+statusUpdated = new EventEmitter<string>();
+```
+
+In your `AccountComponent`, you call `this.accountsService.statusUpdated.emit(status);` whenever the status of an account is updated. This triggers the `EventEmitter` and any subscribers to it receive the new status.
+
+```typescript
+this.accountsService.statusUpdated.emit(status);
+```
+
+n your `NewAccountComponent`, you subscribe to the `statusUpdated` `EventEmitter` in the constructor. This means that whenever the status of an account is updated, the callback function you provided to `subscribe()` is executed, showing an alert with the new status.
+
+```typescript
+this.accountService.statusUpdated.subscribe((status: string) =>
+ alert('New Status: ' + status)
+);
+```
+
+This is a common pattern for cross-component communication in Angular. One component updates some data, and other components that are interested in that data can react to those changes.
+
+## A Different Way Of Injecting Services
+
+If you're using Angular 6+ (check your package.json  to find out), you can provide application-wide services in a different way.
+
+Instead of adding a service class to the `providers[]`  array in `AppModule` , you can set the following config in `@Injectable()` :
+
+```Typescript
+@Injectable({providedIn: 'root'})
+export class MyService { ... }
+```
+
+This is exactly the same as:
+
+```TypeScript
+export class MyService { ... }
+```
+
+and
+
+```typescript
+import { MyService } from './path/to/my.service';
+ 
+@NgModule({
+    ...
+    providers: [MyService]
+})
+export class AppModule { ... }
+```
+
+Using this syntax is completely optional, the traditional syntax (using providers[] ) will also work.
+
+The "new syntax" does offer one advantage though: Services can be loaded lazily by Angular (behind the scenes) and redundant code can be removed automatically. This can lead to a better performance and loading speed - though this really only kicks in for bigger services and apps in general.
+
+**NB: But note this won't work if you don't provide the `@Injectable` decorator for services**
