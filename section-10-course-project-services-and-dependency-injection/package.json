@@ -1,5 +1,5 @@
 {
-  "name": "course-project-cmp-final",
+  "name": "course",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -19,7 +19,8 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "bootstrap": "^3.4.1",
-   "rxjs": "6.6.7",
+    "netlify-cli": "^17.15.1",
+    "rxjs": "6.6.7",
     "rxjs-compat": "6.6.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
