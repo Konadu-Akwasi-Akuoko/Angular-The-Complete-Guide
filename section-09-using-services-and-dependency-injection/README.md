@@ -65,10 +65,7 @@ Redux, on the other hand, is a library for managing global state. It's more powe
 
 5. **Implementing Business Logic**: Services are a good place to implement business logic that doesn't belong in components. Components should be focused on presenting data and capturing user input, while services should handle things like calculations and data processing.
 
-<details>
-<summary>
-Dependency Injection, an OOP concept
-</summary>
+### Dependency Injection, an OOP concept
 
 In OOP, **Dependency Injection** is a design pattern where an object's dependencies (i.e., the other objects it works with) are not hard-coded. Instead, they are provided to the object (injected) at runtime. This makes the code more flexible, testable, and modular.
 
@@ -202,9 +199,8 @@ class DataService {
 }
 ```
 
-In this version, `Logger` is injected into `DataService`. This decouples the two classes, makes it easy to test `DataService` with a mock logger, allows the logger to be changed without modifying `DataService`, and allows the same `Logger` instance to be shared among multiple classes.
-
-</detail>
+In this version, `Logger` is injected into `DataService`. This decouples the two classes, makes it easy to test `DataService` with a mock logger, allows the logger to be changed without modifying `DataService`, and allows the same `Logger` instance to be
+shared among multiple classes.
 
 ## Creating a data service
 
