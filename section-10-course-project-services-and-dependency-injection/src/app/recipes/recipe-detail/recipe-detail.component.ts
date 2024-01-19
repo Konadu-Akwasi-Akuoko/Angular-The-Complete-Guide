@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../recipe-service.service';
 import { Recipe } from '../recipe.model';
+import { ShoppingService } from '../../shopping-list/shopping-service.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -16,5 +17,9 @@ export class RecipeDetailComponent implements OnInit {
     this.recipeService.selectedRecipe.subscribe((recipe: Recipe) => {
       this.selectedRecipe = recipe;
     });
+  }
+
+  onAddToShoppingList() {
+    this.recipeService.addToIngredients(this.selectedRecipe.ingredients);
   }
 }
