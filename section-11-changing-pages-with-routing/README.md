@@ -127,3 +127,19 @@ export const appRoutes: Routes = [
 ```
 
 So, in your application, when you click on 'Home', 'Servers', or 'Users' in the navigation bar, the router will navigate to the corresponding path ('/', '/servers', or '/users'), and the associated component (`HomeComponent`, `ServersComponent`, or `UsersComponent`) will be displayed in place of `<router-outlet />`.
+
+## Navigating with router links
+
+```HTML
+<a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+```
+
+In Angular, routerLink, routerLinkActive, and ariaCurrentWhenActive are directives used for handling routing and accessibility on the client side, without contacting the server.
+
+1. `routerLink`: This directive tells the router where to navigate when the link is clicked. In your example, `routerLink="/"`, it means that when the link is clicked, the router will navigate to the root route ("/").
+
+2. `routerLinkActive`: This directive adds a CSS class to the element when the associated route is active. In your example, `routerLinkActive="active"`, it means that when the "/" route is active, the "active" CSS class will be added to the anchor tag. This is typically used to highlight the currently active link in a navigation menu.
+
+3. `ariaCurrentWhenActive`: This is an accessibility attribute that indicates whether the current item in a set of items is the current active item. In your example, `ariaCurrentWhenActive="page"` means that when the "/" route is active, the `aria-current` attribute of the anchor tag will be set to "page". This helps screen readers understand which page is currently being viewed.
+
+## Understanding navigation paths
