@@ -177,4 +177,55 @@ export class ExampleComponent {
 }
 ```
 
-In this example, the `routerLink` is set to navigate to `./details` relative to the current active route, which is provided by injecting `ActivatedRoute` into the constructor and then binding it to the `relativeTo` input of the `routerLink`. All in all we can say that Angular supports how we move around in Linux.
+In this example, the `routerLink` is set to navigate to `./details` relative to the current active route, which is provided by injecting `ActivatedRoute` into the constructor and then binding it to the `relativeTo` input of the `routerLink`. All in all we can say that Angular supports how we move around in Linux (something like `../ and even ./`).
+
+## Styling active router links
+
+```HTML
+<li
+  role="presentation"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }">
+  <a routerLink="/" ariaCurrentWhenActive="page">Home</a>
+</li>
+```
+
+1. `routerLinkActive`: This directive adds a CSS class to the element when the associated route is active. In your example, `routerLinkActive="active"`, it means that when the "/" route is active, the "active" CSS class will be added to the anchor tag. This is typically used to highlight the currently active link in a navigation menu.
+
+2. `routerLinkActiveOptions`: This directive allows you to configure the behavior of `routerLinkActive`. In your example, `[routerLinkActiveOptions]="{ exact: true }"` means that the "active" class will only be applied when the route is exactly matched. Without `{ exact: true }`, the "active" class would also be applied when the route is a child route. For example, without `{ exact: true }`, if the current route was "/users/1", the "active" class would still be applied because "/users" is a parent route of "/users/1". But with `{ exact: true }`, the "active" class would only be applied when the current route is exactly "/".
+
+As for your second question, `routerLinkActive` and `routerLinkActiveOptions` are using property binding. Property binding in Angular is denoted by square brackets `[]`. Here, you're binding the `routerLinkActive` directive to the string "active", and the `routerLinkActiveOptions` directive to the object `{ exact: true }`. This is not string interpolation or event binding. String interpolation would look like `{{ expression }}`, and event binding would look like `(eventName)="statement"`.
+
+## Navigating programmatically
+
+You can use dependency injection and the Router service to navigate to routes programmatically. To do so you need to inject the `Router` service and use it to navigate to the other routes programmatically:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+ selector: 'app-home',
+ templateUrl: './home.component.html',
+ styleUrls: ['./home.component.css'],
+})
+export class HomeComponent implements OnInit {
+ constructor(private router: Router) {}
+
+ ngOnInit() {}
+
+ onLoadServers() {
+    this.router.navigate(['/servers']);
+ }
+}
+```
+
+In the `onLoadServers()` method, `this.router.navigate(['/servers']);` is used to navigate to the '/servers' route. The `navigate()` method of the `Router` service takes an array of commands that represent the segments of the target URL. In this case, `['/servers']` represents the '/servers' route.
+
+This method is called when the "Load Servers" button is clicked in your `@home.component.html` file:
+
+```html
+<button (click)="onLoadServers()" class="btn btn-primary">Load Servers</button>
+```
+
+So, when the button is clicked, the `onLoadServers()` method is executed, and the application navigates to the '/servers' route.
