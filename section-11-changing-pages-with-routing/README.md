@@ -143,3 +143,38 @@ In Angular, routerLink, routerLinkActive, and ariaCurrentWhenActive are directiv
 3. `ariaCurrentWhenActive`: This is an accessibility attribute that indicates whether the current item in a set of items is the current active item. In your example, `ariaCurrentWhenActive="page"` means that when the "/" route is active, the `aria-current` attribute of the anchor tag will be set to "page". This helps screen readers understand which page is currently being viewed.
 
 ## Understanding navigation paths
+
+In Angular's routing, the `routerLink` directive can be used with both absolute and relative paths, and they affect navigation differently:
+
+1. **Absolute Paths**: An absolute path always refers to the root of the application. It starts with a forward slash (`/`). When you use an absolute path with `routerLink`, no matter where you are in the application, clicking the link will navigate to the specified path from the root. For example, `routerLink="/users"` will always navigate to the `/users` route, regardless of the current location in the app.
+
+   ```html
+   <a routerLink="/users">Users</a>
+   ```
+
+2. **Relative Paths**: A relative path does not start with a forward slash and is relative to the current route. When you use a relative path with `routerLink`, the navigation will be relative to the current URL in the browser's address bar. For example, if you are currently on `/users` and have a link with `routerLink="details"`, clicking the link will navigate to `/users/details`.
+
+   ```html
+   <a routerLink="details">User Details</a>
+   ```
+
+To use relative paths, you often need to provide additional information to the `RouterLink` directive to let it know what to be relative to. This is typically done by using the `relativeTo` property of the `ActivatedRoute` in the component class.
+
+Here's an example of how you might use relative navigation in a component class:
+
+```typescript
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-example',
+  template: `
+    <a [routerLink]="['./details']" [relativeTo]="route">User Details</a>
+  `
+})
+export class ExampleComponent {
+  constructor(private route: ActivatedRoute, private router: Router) {}
+}
+```
+
+In this example, the `routerLink` is set to navigate to `./details` relative to the current active route, which is provided by injecting `ActivatedRoute` into the constructor and then binding it to the `relativeTo` input of the `routerLink`. All in all we can say that Angular supports how we move around in Linux.
