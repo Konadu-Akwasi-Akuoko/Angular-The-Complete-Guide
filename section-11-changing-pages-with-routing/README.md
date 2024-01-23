@@ -229,3 +229,72 @@ This method is called when the "Load Servers" button is clicked in your `@home.c
 ```
 
 So, when the button is clicked, the `onLoadServers()` method is executed, and the application navigates to the '/servers' route.
+
+## Using relatives path programmatically
+
+You can also use relative paths with the `router.navigate()` function. To do this, you need to provide additional information to the `Router` service to let it know what to be relative to. This is typically done by using the `relativeTo` option of the `NavigationExtras` object that you pass to the `navigate()` method.
+
+Here's an example of how you might use relative navigation:
+
+```typescript
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+ selector: 'app-example',
+ template: `
+    <a (click)="goToDetails()">Go to User Details</a>
+ `
+})
+export class ExampleComponent {
+ constructor(private route: ActivatedRoute, private router: Router) {}
+
+ goToDetails() {
+    this.router.navigate(['details'], { relativeTo: this.route });
+ }
+}
+```
+
+In this example, the `goToDetails()` method navigates to the 'details' route relative to the current active route. The `relativeTo` option is set to `this.route`, which is an instance of `ActivatedRoute`. This tells the `Router` service to calculate the target URL based on the current active route.
+
+Please note that the `relativeTo` option expects an instance of `ActivatedRoute`, not a string. So, you cannot use `relativeTo` with a string path like `'../details'`. Instead, you would need to navigate to the parent route first, and then navigate to the child route.
+
+## Passing parameters to routes
+
+In Angular, route parameters are defined in the route configuration. They are specified as part of the path in the route definition. Route parameters are prefixed with a colon `:`.
+
+In your `@app.routes.ts` file, you have already set up route parameters for the `UserComponent` route:
+
+```typescript
+{
+ path: 'users/:id/:name',
+ component: UserComponent,
+}
+```
+
+In this route definition, `:id` and `:name` are route parameters. They represent dynamic values that will be part of the actual URL. For example, if you navigate to `/users/1/John`, `1` will be the value of the `id` parameter and `John` will be the value of the `name` parameter.
+
+These route parameters can be accessed in your `UserComponent` using the `ActivatedRoute` service. Here's an example:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+ selector: 'app-user',
+ templateUrl: './user.component.html',
+ styleUrls: ['./user.component.css'],
+})
+export class UserComponent implements OnInit {
+ user: { id: number; name: string } = { id: 0, name: '' };
+
+ constructor(private route: ActivatedRoute) {}
+
+ ngOnInit() {
+    this.user.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.user.name = this.route.snapshot.paramMap.get('name');
+ }
+}
+```
+
+In this example, `this.route.snapshot.paramMap.get('id')` and `this.route.snapshot.paramMap.get('name')` are used to get the values of the `id` and `name` route parameters.
