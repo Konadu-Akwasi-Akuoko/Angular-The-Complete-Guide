@@ -298,3 +298,60 @@ export class UserComponent implements OnInit {
 ```
 
 In this example, `this.route.snapshot.paramMap.get('id')` and `this.route.snapshot.paramMap.get('name')` are used to get the values of the `id` and `name` route parameters.
+
+## Fetching route parameters
+
+In Angular, you can access route parameters in a component by injecting the `ActivatedRoute` service in the component's constructor. Then, you can use the `snapshot.paramMap.get()` method to get the value of a specific route parameter.
+
+Here's an example of how you can do this in your `UsersComponent`:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+ selector: 'app-users',
+ templateUrl: './users.component.html',
+ styleUrls: ['./users.component.css']
+})
+export class UsersComponent implements OnInit {
+ users = [
+    {
+      id: 1,
+      name: 'Max'
+    },
+    {
+      id: 2,
+      name: 'Anna'
+    },
+    {
+      id: 3,
+      name: 'Chris'
+    }
+ ];
+
+ constructor(private route: ActivatedRoute) {}
+
+ ngOnInit() {
+    let id = this.route.snapshot.paramMap.get('id');
+    console.log(id);
+ }
+}
+```
+
+In this example, `this.route.snapshot.paramMap.get('id')` is used to get the value of the `id` route parameter. Replace `'id'` with the name of the route parameter you want to access.
+
+Please note that this will only work if the `id` parameter is defined in your routing configuration. For example, in your `app.routes.ts` file, you might have something like this:
+
+```typescript
+{
+ path: 'users/:id',
+ component: UsersComponent,
+}
+```
+
+In this case, `:id` is a route parameter, and its value can be accessed in the `UsersComponent` as shown above.
+
+## Fetching route parameters reactively
+
+
