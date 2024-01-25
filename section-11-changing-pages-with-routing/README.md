@@ -390,7 +390,7 @@ export class UsersComponent implements OnInit {
  ngOnInit() {
     this.user.id = Number(this.route.snapshot.paramMap.get('id'));
     this.user.name = this.route.snapshot.paramMap.get('name');
-    
+
     this.route.params.subscribe(params => {
         let id = params['id'];
         console.log(id);
@@ -415,3 +415,56 @@ Please note that this will only work if the `id` parameter is defined in your ro
 ```
 
 In this case, `:id` is a route parameter, and its value can be accessed in the `UsersComponent` as shown above.
+
+## An important note about observables
+
+In Angular, you can use Observables to observe route parameters and automatically clean up when the component gets destroyed. Here's how you can do it in your `UsersComponent`:
+
+```typescript
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
+})
+export class UserComponent implements OnInit, OnDestroy {
+  constructor(private route: ActivatedRoute) {}
+
+  user: { id: number; name: string } = { id: 0, name: '' };
+  private paramSubscription: Subscription;
+
+  ngOnInit() {
+    this.user.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.user.name = this.route.snapshot.paramMap.get('name');
+
+    this.paramSubscription = this.route.params.subscribe((params: Params) => {
+      this.user.id = Number(params['id']);
+      this.user.name = params['name'];
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.paramSubscription.unsubscribe();
+  }
+}
+```
+
+In this example, `this.route.params.subscribe()` is used to subscribe to changes in route parameters. The subscription is stored in `this.paramSubscription`. When the component gets destroyed, the `ngOnDestroy()` lifecycle hook is called, and `this.paramSubscription.unsubscribe()` is used to cancel the subscription.
+
+Please note that this will only work if the `id` parameter is defined in your routing configuration. For example, in your `app.routes.ts` file, you might have something like this:
+
+```typescript
+{
+ path: 'users/:id',
+ component: UsersComponent,
+}
+```
+
+In this case, `:id` is a route parameter, and its value can be accessed in the `UsersComponent` as shown above.
+
+Subscribing to route parameters allows your component to react to changes in those parameters. When a route parameter changes, the callback function you provide to `subscribe()` will be executed. This is useful when you want to perform some action based on the new value of the route parameter. For example, you might want to fetch data related to the new parameter value from a server.
+
+Destroying the subscription when the component is destroyed is necessary to prevent memory leaks. When you subscribe to an Observable, you create a connection that remains open until you explicitly close it by calling `unsubscribe()`. If you don't do this, the connection stays open even when the component is no longer in use, which can lead to unnecessary network requests and consume memory. By calling `unsubscribe()` in the `ngOnDestroy()` lifecycle hook, you ensure that the connection is closed when the component is destroyed.
