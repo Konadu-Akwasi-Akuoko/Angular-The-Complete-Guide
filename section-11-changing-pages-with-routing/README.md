@@ -354,4 +354,64 @@ In this case, `:id` is a route parameter, and its value can be accessed in the `
 
 ## Fetching route parameters reactively
 
+The `route.params.subscribe()` function in Angular allows you to react to changes in route parameters. Whenever a route parameter changes, the callback function you provide to `subscribe()` will be executed.
 
+Here's how you can use it in your `UsersComponent`:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+ selector: 'app-users',
+ templateUrl: './users.component.html',
+ styleUrls: ['./users.component.css']
+})
+export class UsersComponent implements OnInit {
+ user: { id: number; name: string } = { id: 0, name: '' };
+ 
+ users = [
+    {
+      id: 1,
+      name: 'Max'
+    },
+    {
+      id: 2,
+      name: 'Anna'
+    },
+    {
+      id: 3,
+      name: 'Chris'
+    }
+ ];
+
+ constructor(private route: ActivatedRoute) {}
+
+ ngOnInit() {
+    this.user.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.user.name = this.route.snapshot.paramMap.get('name');
+    
+    this.route.params.subscribe(params => {
+        let id = params['id'];
+        console.log(id);
+        // You can now use the updated id to perform actions based on the new route parameter
+   
+        this.user.id = Number(params['id']);
+        this.user.name = params['name'];
+    });
+ }
+}
+```
+
+In this example, `this.route.params.subscribe()` is used to subscribe to changes in route parameters. The callback function takes a `params` object as an argument, which contains all the current route parameters. You can then use `params['id']` to get the value of the `id` route parameter.
+
+Please note that this will only work if the `id` parameter is defined in your routing configuration. For example, in your `app.routes.ts` file, you might have something like this:
+
+```typescript
+{
+ path: 'users/:id',
+ component: UsersComponent,
+}
+```
+
+In this case, `:id` is a route parameter, and its value can be accessed in the `UsersComponent` as shown above.
