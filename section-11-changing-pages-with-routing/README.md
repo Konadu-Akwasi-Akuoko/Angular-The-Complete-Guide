@@ -468,3 +468,62 @@ In this case, `:id` is a route parameter, and its value can be accessed in the `
 Subscribing to route parameters allows your component to react to changes in those parameters. When a route parameter changes, the callback function you provide to `subscribe()` will be executed. This is useful when you want to perform some action based on the new value of the route parameter. For example, you might want to fetch data related to the new parameter value from a server.
 
 Destroying the subscription when the component is destroyed is necessary to prevent memory leaks. When you subscribe to an Observable, you create a connection that remains open until you explicitly close it by calling `unsubscribe()`. If you don't do this, the connection stays open even when the component is no longer in use, which can lead to unnecessary network requests and consume memory. By calling `unsubscribe()` in the `ngOnDestroy()` lifecycle hook, you ensure that the connection is closed when the component is destroyed.
+
+**NB:** For subscribing to routes with the `ActivatedRoute` service Angular automatically does the unsubscribing for us.
+
+## Passing querying parameters and fragments
+
+```html
+      <a
+        href="#"
+        class="list-group-item"
+        [routerLink]="['/servers', 5, 'edit']"
+        [fragment]="'loading'"
+        [queryParams]="{ allowEdit: 1 }"
+      >
+        {{ server.name }}
+      </a>
+```
+
+In Angular, query parameters and fragments are part of the URL structure that provide additional information to the route. They are used to pass data to the route without changing the URL path.
+
+**Query Parameters**: Query parameters are key-value pairs appended to the URL after a `?` symbol. They are used to filter or sort data, among other things. In your code, `[queryParams]="{ allowEdit: 1 }"` is setting a query parameter named `allowEdit` with a value of `1`. This means that the URL will look something like `/servers/5/edit?allowEdit=1`.
+
+**Fragments**: Fragments are identifiers appended to the URL after a `#` symbol. They are used to navigate to a specific part of a webpage. In your code, `[fragment]="'loading'"` is setting a fragment named `loading`. This means that the URL will look something like `/servers/5/edit#loading`.
+
+To create query parameters and fragments in Angular, you can use the `routerLink` directive along with the `queryParams` and `fragment` properties. Here's an example:
+
+```html
+<a
+ routerLink="/path"
+ [queryParams]="{ param1: 'value1', param2: 'value2' }"
+ fragment="section1"
+>
+ Link Text
+</a>
+```
+
+In this example, clicking the link will navigate to `/path?param1=value1&param2=value2#section1`.
+
+In Angular, you can programmatically navigate to a route with query parameters and fragments using the `Router` service's `navigate` method.
+
+Here's how you can modify your `onLoadServers` method in `@home.component.ts` to include query parameters and fragments:
+
+```typescript
+onLoadServers(id: number) {
+ this.router.navigate(['/servers', id, 'edit'], {
+    queryParams: { allowEdit: '1' },
+    fragment: 'loading',
+ });
+}
+```
+
+In this code:
+
+- `'/servers'` is the base path of the route.
+- `id` is a route parameter.
+- `'edit'` is another segment of the route.
+- `{ allowEdit: '1' }` is an object representing the query parameters.
+- `'loading'` is the fragment.
+
+When this method is called, it will navigate to a URL like `/servers/{id}/edit?allowEdit=1#loading`, where `{id}` is replaced with the actual `id` passed to the method.
