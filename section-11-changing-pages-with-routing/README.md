@@ -564,3 +564,51 @@ In this code:
 - `this.route.snapshot.fragment` gets the initial fragment.
 
 Remember to unsubscribe from these observables when the component is destroyed to prevent memory leaks.
+
+## Setting up Child(Nested) routes
+
+In Angular, nested routes are defined by specifying child routes in the parent route's configuration. Each child route has its own path and component.
+
+Looking at your `@app.routes.ts` file, you already have nested routes defined for the `UsersComponent`:
+
+```typescript
+{
+ path: 'users',
+ component: UsersComponent,
+ children: [
+    {
+      path: ':id/:name',
+      component: UserComponent,
+    },
+ ],
+}
+```
+
+In this configuration, `UserComponent` is a child route of `UsersComponent`. The `:id/:name` path indicates that this route expects two parameters: `id` and `name`.
+
+To navigate to this nested route, you would use a `routerLink` like this:
+
+```html
+<a [routerLink]="['/users', userId, userName]">Go to user</a>
+```
+
+Where `userId` and `userName` are variables containing the ID and name of the user you want to navigate to.
+
+In Angular, `<router-outlet>` is a directive that acts as a placeholder for the component that should be loaded based on the current route. When you define child routes, the `<router-outlet>` directive in the parent component's template will display the component associated with the active child route.
+
+In your `@users.component.html` file, you have a `<router-outlet>` directive:
+
+```html
+<router-outlet></router-outlet>
+```
+
+This directive will display the component associated with the active child route under the `UsersComponent`. For example, if the current route is `/users/1/John`, the `UserComponent` will be displayed because it matches the child route definition in `@app.routes.ts`.
+
+The `UserComponent` will receive the `id` and `name` parameters from the route, as shown in your `@user.component.ts` file:
+
+```typescript
+this.user.id = Number(this.route.snapshot.paramMap.get('id'));
+this.user.name = this.route.snapshot.paramMap.get('name');
+```
+
+So, when you navigate to `/users/1/John`, the `UserComponent` will be displayed in the `<router-outlet>` of the `UsersComponent`, and the `UserComponent` will have access to the `id` and `name` parameters from the route.
