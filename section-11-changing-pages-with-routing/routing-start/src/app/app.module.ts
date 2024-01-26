@@ -23,7 +23,7 @@ import { appRoutes } from './app.routes';
     ServerComponent,
   ],
   imports: [BrowserModule, FormsModule, RouterModule.forRoot(appRoutes)],
-  providers: [ServersService],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

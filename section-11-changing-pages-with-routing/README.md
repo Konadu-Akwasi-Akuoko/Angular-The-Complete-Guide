@@ -527,3 +527,40 @@ In this code:
 - `'loading'` is the fragment.
 
 When this method is called, it will navigate to a URL like `/servers/{id}/edit?allowEdit=1#loading`, where `{id}` is replaced with the actual `id` passed to the method.
+
+## Retrieving query parameters and fragments
+
+In Angular, you can retrieve query parameters and fragments using the `ActivatedRoute` service.
+
+Here's how you can modify your `ngOnInit` method in `@edit-server.component.ts` to retrieve query parameters and fragments:
+
+```typescript
+ngOnInit() {
+ // Subscribe to query params and fragment changes
+ this.route.queryParams.subscribe(params => {
+    console.log('Query Params: ', params);
+ });
+
+ this.route.fragment.subscribe(fragment => {
+    console.log('Fragment: ', fragment);
+ });
+
+ // Get initial values, this won't update when the query params or fragments change
+ const initialParams = this.route.snapshot.queryParams;
+ const initialFragment = this.route.snapshot.fragment;
+
+ console.log('Initial Query Params: ', initialParams);
+ console.log('Initial Fragment: ', initialFragment);
+
+ // Rest of your code...
+}
+```
+
+In this code:
+
+- `this.route.queryParams.subscribe()` subscribes to changes in the query parameters. Whenever the query parameters change, the callback function logs the new parameters.
+- `this.route.fragment.subscribe()` subscribes to changes in the fragment. Whenever the fragment changes, the callback function logs the new fragment.
+- `this.route.snapshot.queryParams` gets the initial query parameters.
+- `this.route.snapshot.fragment` gets the initial fragment.
+
+Remember to unsubscribe from these observables when the component is destroyed to prevent memory leaks.
