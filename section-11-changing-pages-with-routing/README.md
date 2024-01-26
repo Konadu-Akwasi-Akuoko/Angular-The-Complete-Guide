@@ -913,3 +913,56 @@ In your case, you have applied the `AuthGuard` to the 'servers' route. This mean
 ```
 
 With this setup, when a user tries to navigate to a child route of the 'servers' route, the `AuthGuard`'s `canActivateChild` method will be called. If the user is authenticated, the child route will be activated. If the user is not authenticated, they will be redirected to the root route ('/').
+
+## Use fake auth service
+
+In your Angular application, you've implemented a simple authentication system using a fake `AuthService`. Here's how it works:
+
+1. **Fake Authentication Service**
+
+The `AuthService` in `auth.service.ts` is a simple service that simulates authentication. It has a `loggedIn` property that indicates whether the user is logged in or not. It also has `login` and `logout` methods that change the value of `loggedIn`.
+
+```typescript
+export class AuthService {
+ loggedIn = false;
+
+ login() {
+    this.loggedIn = true;
+ }
+
+ logout() {
+    this.loggedIn = false;
+ }
+}
+```
+
+2. **Authentication Check**
+
+The `AuthService` also has an `isAuthenticated` method that returns a promise that resolves to the value of `loggedIn`. This method is used to check if the user is authenticated.
+
+```typescript
+isAuthenticated(): Promise<boolean> {
+ const promise: Promise<boolean> = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(this.loggedIn);
+    }, 300);
+ });
+ return promise;
+}
+```
+
+3. **Using the Authentication Service**
+
+In the `HomeComponent` in `home.component.ts`, you're using the `AuthService` to simulate logging in and out. When the "Login" button is clicked, the `onLogin` method is called, which calls the `login` method of the `AuthService`. Similarly, when the "Logout" button is clicked, the `onLogout` method is called, which calls the `logout` method of the `AuthService`.
+
+```typescript
+onLogin() {
+ this.authService.login();
+}
+
+onLogout() {
+ this.authService.logout();
+}
+```
+
+In summary, you've created a simple fake authentication system using a `AuthService`. This system allows you to simulate logging in and out, and check if the user is authenticated.
