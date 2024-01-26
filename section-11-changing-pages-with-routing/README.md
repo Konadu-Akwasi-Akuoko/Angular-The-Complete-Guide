@@ -664,7 +664,7 @@ In Angular, redirection and wildcard routes are used to handle unknown routes an
 
 So, in summary, redirection and wildcard routes are used together to handle unknown routes and redirect users to a specific route (in this case, the 'not-found' route).
 
-## Important: Redirection Path Matching'
+## Important: Redirection Path Matching
 
 In Angular, routes are matched by prefix by default. This means that if you define a route with an empty path (`''`), it will match any URL, causing a redirection loop. This is because every URL starts with an empty string.
 
@@ -685,3 +685,76 @@ However, this is usually not what you want. You typically want to match the exac
 Now, the route will only match if the full path is an empty string. So, if you navigate to '/somewhere-else', you won't be redirected again, because the full path is not an empty string. But if you navigate to any other URL, you will still be redirected to '/somewhere-else', because the full path is an empty string.
 
 In summary, the `pathMatch` property allows you to control whether a route should match the full path or just a prefix. By setting `pathMatch` to 'full', you can prevent redirection loops caused by matching every URL.
+
+## Outsourcing the route configuration
+
+Creating a separate module for routes in Angular involves creating a new Angular module and defining the routes in that module. Here's how you can do it:
+
+1. First, generate a new module using the Angular CLI command `ng generate module`. Let's call it `AppRoutingModule`.
+
+   ```bash
+   ng generate module app-routing
+   ```
+
+2. Next, define your routes in the `AppRoutingModule`. Create a constant array of routes and pass it to the `RouterModule.forRoot()` method. This method returns a module that contains all the directives and services needed for routing.
+
+   ```typescript
+   import { RouterModule, Routes } from '@angular/router';
+   import { HomeComponent } from './home/home.component';
+   import { ServersComponent } from './servers/servers.component';
+   import { UserComponent } from './users/user/user.component';
+   import { UsersComponent } from './users/users.component';
+   import { EditServerComponent } from './servers/edit-server/edit-server.component';
+   import { ServerComponent } from './servers/server/server.component';
+   import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+
+   const appRoutes: Routes = [
+     { path: '', component: HomeComponent },
+     { path: 'users', component: UsersComponent, children: [
+       { path: ':id/:name', component: UserComponent },
+     ]},
+     { path: 'servers', component: ServersComponent, children: [
+       { path: ':id', component: ServerComponent },
+       { path: ':id/edit', component: EditServerComponent },
+     ]},
+     { path: 'not-found', component: PageNotFoundComponent },
+     { path: '**', redirectTo: 'not-found' },
+   ];
+
+   @NgModule({
+     imports: [RouterModule.forRoot(appRoutes)],
+     exports: [RouterModule],
+   })
+   export class AppRoutingModule {}
+   ```
+
+3. Finally, import the `AppRoutingModule` in your `AppModule`.
+
+   ```typescript
+   import { AppRoutingModule } from './app-routing.module';
+
+   @NgModule({
+     imports: [BrowserModule, FormsModule, AppRoutingModule],
+     declarations: [AppComponent, HomeComponent, UsersComponent, ServersComponent, UserComponent, EditServerComponent, ServerComponent, PageNotFoundComponent],
+     bootstrap: [AppComponent],
+   })
+   export class AppModule {}
+   ```
+
+This way, you have separated the routing logic into its own module, making your code cleaner and easier to maintain.
+
+The `@NgModule` decorator is used to define a module in Angular. A module is a way to group together related components, directives, pipes, and services that are specific to an application domain or a workflow.
+
+Here's what the `@NgModule` decorator does:
+
+- **Declarations**: This is where you declare which components belong to this module. Declaring components makes them available for use within the templates of other components that belong to this module.
+
+- **Imports**: This is where you import other modules that export components, directives, or pipes that you want to use in this module.
+
+- **Providers**: This is where you define the services that this module contributes to the global collection of services; they become accessible in all parts of the app.
+
+- **Exports**: This is where you define the subset of declarations that should be visible and usable in the component templates of other modules.
+
+- **Bootstrap**: This is where you define the root component that Angular creates and inserts into the index.html host web page.
+
+In the context of your `AppRoutingModule`, the `@NgModule` decorator is used to define a module that handles routing. It imports the `RouterModule` and exports it so that it can be used in other modules. The `RouterModule.forRoot(appRoutes)` method is used to provide the router service and configure the routes.
