@@ -758,3 +758,19 @@ Here's what the `@NgModule` decorator does:
 - **Bootstrap**: This is where you define the root component that Angular creates and inserts into the index.html host web page.
 
 In the context of your `AppRoutingModule`, the `@NgModule` decorator is used to define a module that handles routing. It imports the `RouterModule` and exports it so that it can be used in other modules. The `RouterModule.forRoot(appRoutes)` method is used to provide the router service and configure the routes.
+
+## An introduction to guards
+
+In Angular, Guards are interfaces that tell the router whether or not it should allow navigation to a requested route. They make decisions based on the current state of the application and the destination of the navigation request.
+
+There are several types of guards in Angular:
+
+1. **CanActivate**: Decides if a route can be activated.
+2. **CanActivateChild**: Decides if children routes of a route can be activated.
+3. **CanDeactivate**: Decides if a route can be deactivated.
+4. **Resolve**: Performs route data resolution before the route is loaded.
+5. **CanLoad**: Decides if a module can be loaded lazily.
+
+Each guard is an interface that you can implement to perform a check. If the check passes, the navigation continues. If it fails, the navigation is cancelled.
+
+For example, you might have a `CanActivate` guard that checks if a user is authenticated before allowing them to navigate to a protected route. If the user is not authenticated, the guard would return false, and the navigation would be cancelled.
