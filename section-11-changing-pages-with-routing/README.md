@@ -966,3 +966,7 @@ onLogout() {
 ```
 
 In summary, you've created a simple fake authentication system using a `AuthService`. This system allows you to simulate logging in and out, and check if the user is authenticated.
+
+## Controlling navigation with `canDeactivate`
+
+<!-- ! Write notes for using `canDeactivate` -->

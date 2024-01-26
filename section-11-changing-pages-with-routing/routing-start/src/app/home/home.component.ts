@@ -12,6 +12,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {}
 
+  loggedIn: boolean = false;
+  loggedOut: boolean = true;
+
   onLoadServers(id: number) {
     this.router.navigate(['/servers', id, 'edit'], {
       queryParams: { allowEdit: '1' },
@@ -21,9 +24,13 @@ export class HomeComponent implements OnInit {
 
   onLogin() {
     this.authService.login();
+    this.loggedIn = true;
+    this.loggedOut = false;
   }
 
   onLogout() {
     this.authService.logout();
+    this.loggedOut = true;
+    this.loggedIn = false;
   }
 }

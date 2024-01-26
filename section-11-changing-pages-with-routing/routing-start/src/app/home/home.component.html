@@ -1,9 +1,15 @@
 <h4>Welcome to Server Manager 4.0</h4>
 <p>Manage your Servers and Users.</p>
 
+<p>Login before performing any action</p>
+
 <button (click)="onLoadServers(1)" class="btn btn-primary">
   Load Server 1
 </button>
 
-<button class="btn btn-default" (click)="onLogin()">Login</button>
-<button class="btn btn-default" (click)="onLogout()">Logout</button>
+<button class="btn btn-default" (click)="onLogin()">
+  {{ loggedIn ? "Logged In" : "Login" }}
+</button>
+<button class="btn btn-default" (click)="onLogout()">
+  {{ loggedOut ? "Logged out" : "Log out" }}
+</button>
