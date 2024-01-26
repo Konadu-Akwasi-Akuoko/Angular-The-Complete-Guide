@@ -774,3 +774,92 @@ There are several types of guards in Angular:
 Each guard is an interface that you can implement to perform a check. If the check passes, the navigation continues. If it fails, the navigation is cancelled.
 
 For example, you might have a `CanActivate` guard that checks if a user is authenticated before allowing them to navigate to a protected route. If the user is not authenticated, the guard would return false, and the navigation would be cancelled.
+
+## Protecting routes on `canActivate`
+
+In Angular, you can use the `canActivate` method to protect routes and ensure that only authenticated users can access certain parts of your application. This is done by creating a guard service that implements the `CanActivate` interface.
+
+Here's how you can do it:
+
+1. **Create a Guard Service**
+
+First, you need to create a guard service. This service will implement the `CanActivate` interface, which requires a `canActivate` method. This method will determine whether a route can be activated based on some condition.
+
+In your case, you already have an `AuthGuard` service defined in the `auth-guard.service.ts` file. This service has a `canActivate` method that checks if the user is authenticated by calling the `isAuthenticated` method from the `AuthService`.
+
+```typescript
+@Injectable({
+ providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+ constructor(private router: Router, private authService: AuthService) {}
+ canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.authService.isAuthenticated().then((authenticated: boolean) => {
+      if (authenticated) {
+        return true;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+ }
+}
+```
+
+And here is the code for the `AuthService` that we are using in the  `AuthGuard`:
+
+```TypeScript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  loggedIn = false;
+
+  isAuthenticated(): Promise<boolean> {
+    const promise: Promise<boolean> = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.loggedIn);
+      }, 300);
+    });
+    return promise;
+  }
+
+  login() {
+    this.loggedIn = true;
+  }
+
+  logout() {
+    this.loggedIn = false;
+  }
+}
+```
+
+2. **Use the Guard in Your Routes**
+
+Next, you need to use this guard in your routes. This is done in the `app-routing.module.ts` file. You can apply the guard to a route by adding it to the `canActivate` array in the route definition.
+
+In your case, you have applied the `AuthGuard` to the 'servers' route. This means that the 'servers' route can only be activated if the `canActivate` method of the `AuthGuard` returns `true`.
+
+```typescript
+{
+ path: 'servers',
+ component: ServersComponent,
+ canActivate: [AuthGuard],
+ children: [
+    {
+      path: ':id',
+      component: ServerComponent,
+    },
+    {
+      path: ':id/edit',
+      component: EditServerComponent,
+    },
+ ],
+}
+```
+
+With this setup, when a user tries to navigate to the 'servers' route, the `AuthGuard`'s `canActivate` method will be called. If the user is authenticated, the route will be activated. If the user is not authenticated, they will be redirected to the root route ('/').
