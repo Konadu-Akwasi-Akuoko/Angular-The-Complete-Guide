@@ -638,3 +638,50 @@ onEditClick() {
 This code will navigate to the 'edit' route while preserving the current query parameters.
 
 Please note that the `relativeTo` property is used to create a relative link. It tells the router to calculate the target URL based on the current route. In this case, it means that the 'edit' route is a child route of the current route.
+
+## Redirecting and wildcard routes
+
+In Angular, redirection and wildcard routes are used to handle unknown routes and redirect users to specific routes.
+
+1. **Redirection**: Redirection is done using the `redirectTo` property in the route configuration. When a user tries to navigate to a route that matches the path specified in the `path` property, they are automatically redirected to the route specified in the `redirectTo` property.
+
+   In your `app.routes.ts` file, there is a redirection rule defined as follows:
+
+   ```typescript
+   { path: 'not-found', component: PageNotFoundComponent },
+   { path: '**', redirectTo: 'not-found' },
+   ```
+
+   This means that if a user tries to navigate to a route that doesn't match any of the defined routes, they will be redirected to the 'not-found' route, which displays the `PageNotFoundComponent`.
+
+2. **Wildcard Routes**: Wildcard routes are used to catch all unmatched routes. They are defined using the `**` path. In your `app.routes.ts` file, the wildcard route is defined as follows:
+
+   ```typescript
+   { path: '**', redirectTo: 'not-found' },
+   ```
+
+   This means that if a user tries to navigate to a route that doesn't match any of the defined routes, they will be redirected to the 'not-found' route.
+
+So, in summary, redirection and wildcard routes are used together to handle unknown routes and redirect users to a specific route (in this case, the 'not-found' route).
+
+## Important: Redirection Path Matching'
+
+In Angular, routes are matched by prefix by default. This means that if you define a route with an empty path (`''`), it will match any URL, causing a redirection loop. This is because every URL starts with an empty string.
+
+For example, consider the following route definition:
+
+```typescript
+{ path: '', redirectTo: '/somewhere-else' }
+```
+
+With this configuration, if you navigate to any URL in your application, you will always be redirected to '/somewhere-else'. This is because the empty string is a prefix of every URL.
+
+However, this is usually not what you want. You typically want to match the exact path, not just any path that starts with a certain string. To do this, you can change the matching strategy to 'full' using the `pathMatch` property:
+
+```typescript
+{ path: '', redirectTo: '/somewhere-else', pathMatch: 'full' }
+```
+
+Now, the route will only match if the full path is an empty string. So, if you navigate to '/somewhere-else', you won't be redirected again, because the full path is not an empty string. But if you navigate to any other URL, you will still be redirected to '/somewhere-else', because the full path is an empty string.
+
+In summary, the `pathMatch` property allows you to control whether a route should match the full path or just a prefix. By setting `pathMatch` to 'full', you can prevent redirection loops caused by matching every URL.
