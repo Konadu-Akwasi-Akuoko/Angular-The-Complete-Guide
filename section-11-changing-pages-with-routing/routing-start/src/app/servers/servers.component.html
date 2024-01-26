@@ -7,7 +7,7 @@
         class="list-group-item"
         [routerLink]="['/servers', server.id]"
         [fragment]="'loading'"
-        [queryParams]="{ allowEdit: 1 }"
+        [queryParams]="{ allowEdit: server.id === 3 ? '1' : '0' }"
       >
         {{ server.name }}
       </a>

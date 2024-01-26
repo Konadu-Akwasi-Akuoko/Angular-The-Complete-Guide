@@ -612,3 +612,29 @@ this.user.name = this.route.snapshot.paramMap.get('name');
 ```
 
 So, when you navigate to `/users/1/John`, the `UserComponent` will be displayed in the `<router-outlet>` of the `UsersComponent`, and the `UserComponent` will have access to the `id` and `name` parameters from the route.
+
+## Configuring the handling of route parameters
+
+In Angular, you can preserve or merge route parameters when navigating to a different route by using the `NavigationExtras` object in the `navigate` method.
+
+The `NavigationExtras` object has several properties that control how the navigation occurs. One of these properties is `queryParamsHandling`, which controls how the query parameters are handled during navigation.
+
+There are three possible values for `queryParamsHandling`:
+
+- `'merge'`: Merges the current query params with the ones provided.
+- `'preserve'`: Preserves the current query params.
+
+In your case, you want to preserve the current query parameters when navigating to the 'edit' route. Here's how you can do it:
+
+```typescript
+onEditClick() {
+ this.router.navigate(['edit'], { 
+    relativeTo: this.route,
+    queryParamsHandling: 'preserve' 
+ });
+}
+```
+
+This code will navigate to the 'edit' route while preserving the current query parameters.
+
+Please note that the `relativeTo` property is used to create a relative link. It tells the router to calculate the target URL based on the current route. In this case, it means that the 'edit' route is a child route of the current route.
