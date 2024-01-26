@@ -863,3 +863,53 @@ In your case, you have applied the `AuthGuard` to the 'servers' route. This mean
 ```
 
 With this setup, when a user tries to navigate to the 'servers' route, the `AuthGuard`'s `canActivate` method will be called. If the user is authenticated, the route will be activated. If the user is not authenticated, they will be redirected to the root route ('/').
+
+## Protecting child(nested) routes with `canActivateChild`
+
+In Angular, you can use the `canActivateChild` method to protect child routes of a parent route. This is done by creating a guard service that implements the `CanActivateChild` interface.
+
+Here's how you can do it:
+
+1. **Implement `CanActivateChild` Interface**
+
+First, you need to modify your `AuthGuard` service to also implement the `CanActivateChild` interface. This interface requires a `canActivateChild` method. This method will determine whether a child route can be activated based on some condition.
+
+In your case, you already have an `AuthGuard` service defined in the `auth-guard.service.ts` file. This service has a `canActivateChild` method that calls the `canActivate` method.
+
+```typescript
+export class AuthGuard implements CanActivate, CanActivateChild {
+ // ...
+ canActivateChild(
+    childRoute: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(childRoute, state);
+ }
+}
+```
+
+2. **Use the Guard in Your Parent Route**
+
+Next, you need to use this guard in your parent route. This is done in the `app-routing.module.ts` file. You can apply the guard to a parent route by adding it to the `canActivateChild` array in the route definition.
+
+In your case, you have applied the `AuthGuard` to the 'servers' route. This means that all child routes of the 'servers' route can only be activated if the `canActivateChild` method of the `AuthGuard` returns `true`.
+
+```typescript
+{
+ path: 'servers',
+ component: ServersComponent,
+ canActivateChild: [AuthGuard],
+ children: [
+    {
+      path: ':id',
+      component: ServerComponent,
+    },
+    {
+      path: ':id/edit',
+      component: EditServerComponent,
+    },
+ ],
+}
+```
+
+With this setup, when a user tries to navigate to a child route of the 'servers' route, the `AuthGuard`'s `canActivateChild` method will be called. If the user is authenticated, the child route will be activated. If the user is not authenticated, they will be redirected to the root route ('/').
