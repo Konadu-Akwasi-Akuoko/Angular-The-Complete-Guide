@@ -775,6 +775,14 @@ Each guard is an interface that you can implement to perform a check. If the che
 
 For example, you might have a `CanActivate` guard that checks if a user is authenticated before allowing them to navigate to a protected route. If the user is not authenticated, the guard would return false, and the navigation would be cancelled.
 
+In Angular, `canActivate` and `canDeactivate` are interfaces used as part of the router's guard processes.
+
+- The `canActivate` guard is used to decide if a route can be activated. This is useful for checking if a user has the necessary permissions to visit a certain route.
+
+- The `canDeactivate` guard is used to decide if a route can be deactivated. This is useful for preventing users from accidentally leaving a route where they might be entering data, for example, in a form.
+
+These guards provide a powerful way to control navigation within an Angular application. They help in maintaining the integrity of the data and the user experience.
+
 ## Protecting routes on `canActivate`
 
 In Angular, you can use the `canActivate` method to protect routes and ensure that only authenticated users can access certain parts of your application. This is done by creating a guard service that implements the `CanActivate` interface.
@@ -969,4 +977,98 @@ In summary, you've created a simple fake authentication system using a `AuthServ
 
 ## Controlling navigation with `canDeactivate`
 
-<!-- ! Write notes for using `canDeactivate` -->
+`CanDeactivate` is a route guard in Angular that allows you to prevent a user from accidentally leaving a component with unsaved changes. It's typically used in forms where a user might have entered data but not submitted it.
+
+The `CanDeactivate` guard is a function that will be called by the Angular router when the user tries to navigate away from the current route. It can return either a boolean or a Promise or Observable that resolves to a boolean. If it returns or resolves to true, navigation will continue. If it returns or resolves to false, navigation will be cancelled.
+
+The `CanDeactivate` guard is implemented as an interface in TypeScript. This is not strictly necessary, but it's a good practice because it provides type safety. By defining an interface, you're saying that any component that wants to use the `CanDeactivate` guard must have a `canDeactivate` method that returns a boolean or a Promise or Observable that resolves to a boolean.
+
+So you first create your interface, `CanComponentDeactivate` is the interface that specifies this contract, after that you export a class that uses the canDeactivate guard and has the interface as it's generic return type. Any component that implements this interface must define a canDeactivate method:
+
+```TypeScript
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
+
+export class CanDeactivateGuard
+  implements CanDeactivate<CanComponentDeactivate>
+{
+  constructor() {}
+
+  canDeactivate(
+    component: CanComponentDeactivate,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return component.canDeactivate();
+  }
+}
+
+```
+
+From the above code, we can see that there is a method called canDeactivate, and it accepts a `component` the current component of the route, the `currentRoute`, the `currentState`, and the `nextState` (the route which is coming next).
+
+This `canDeactivateGuard` class which have a method of `canDeactivate` will return `component.canDeactivate()`, meaning that any component that will implement this `canDeactivate` guard will need to implement a `canDeactivate()` method for this to work.
+
+The `canDeactivate` method in the `CanDeactivateGuard` service is calling component.`canDeactivate()`. This is because the decision of whether or not to allow deactivation might depend on the state of the component. For example, if the component is a form and the user has made unsaved changes, you might want to ask the user to confirm before navigating away. This logic would be implemented in the component's own `canDeactivate` method.
+
+```TypeScript
+export class MyComponent implements CanComponentDeactivate {
+  unsavedChanges = true;
+
+  canDeactivate() {
+    if (this.unsavedChanges) {
+      return window.confirm('You have unsaved changes. Are you sure you want to leave?');
+    } else {
+      return true;
+    }
+  }
+}
+```
+
+So this component will implement the guard, and by doing so this component can provide custom logic and when and how to activate this guard, so that the user can navigate to a different route. Check this [file](/routing-start/src/app/servers/edit-server/edit-server.component.ts).
+
+After this you can use the `canDeactivate` guard inside your route's module:
+
+```TypeScript
+{
+    path: 'servers',
+    component: ServersComponent,
+    // canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: ':id',
+        component: ServerComponent,
+      },
+      {
+        path: ':id/edit',
+        component: EditServerComponent,
+        canDeactivate: [CanDeactivateGuard],
+      },
+    ],
+  },
+```
+
+After all this the [routing](/routing-start/src/app/app-routing.module.ts) will look something like this:
+
+```TypeScript
+{
+    path: 'servers',
+    component: ServersComponent,
+    // canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: ':id',
+        component: ServerComponent,
+      },
+      {
+        path: ':id/edit',
+        component: EditServerComponent,
+        canDeactivate: [CanDeactivateGuard],
+      },
+    ],
+  },
+  ```
