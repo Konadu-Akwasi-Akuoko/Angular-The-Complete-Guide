@@ -1071,4 +1071,65 @@ After all this the [routing](/routing-start/src/app/app-routing.module.ts) will 
       },
     ],
   },
-  ```
+```
+
+## Passing static data to a route
+
+In Angular, you can pass static data to a route's component using the `data` property when defining routes. This is particularly useful for passing data that is not dynamic and does not change based on user interaction or other runtime conditions. The data passed through the `data` property can be accessed within the component using the `ActivatedRoute` service.
+
+Here's how you can do it:
+
+1. **Define the Route with Data**: In your routing module (`app-routing.module.ts`), you define a route and include a `data` property with the static data you want to pass. For example:
+
+```typescript
+{
+ path: 'not-found',
+ component: ErrorPageComponent,
+ data: { message: 'Page not found' },
+}
+```
+
+In this example, a static message "Page not found" is passed to the `ErrorPageComponent` when the route `/not-found` is activated.
+
+2. **Access the Data in the Component**: In the component that is associated with the route (`error-page.component.ts`), you can access the data passed through the route using the `ActivatedRoute` service. You can subscribe to the `data` observable provided by the `ActivatedRoute` to get the data. For example:
+
+```typescript
+ngOnInit(): void {
+ this.route.data.subscribe((data) => {
+    this.errorMessage = data['message'];
+ });
+}
+```
+
+In this example, the `ErrorPageComponent` subscribes to the `data` observable of the `ActivatedRoute` service. When the route is activated, the component receives the data passed through the route and assigns it to the `errorMessage` property.
+
+This approach allows you to pass static data to components in a clean and Angular-idiomatic way, making your application more modular and easier to maintain.
+
+To use `this.route.snapshot.data['message']` for accessing the static data passed through the route, you can utilize the `snapshot` property of the `ActivatedRoute` service. The `snapshot` property provides a snapshot of the current route information, including the data passed through the route. This approach is synchronous and does not require subscribing to an observable.
+
+Here's how you can modify the `ErrorPageComponent` to use `this.route.snapshot.data['message']`:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+ selector: 'app-error-page',
+ templateUrl: './error-page.component.html',
+ styleUrls: ['./error-page.component.css'],
+})
+export class ErrorPageComponent implements OnInit {
+ errorMessage: string;
+
+ constructor(private route: ActivatedRoute) {}
+
+ ngOnInit(): void {
+    // Using snapshot to access the data synchronously
+    this.errorMessage = this.route.snapshot.data['message'];
+ }
+}
+```
+
+In this modified version of the `ErrorPageComponent`, the `ngOnInit` method directly assigns the static message passed through the route to the `errorMessage` property using `this.route.snapshot.data['message']`. This approach is simpler and more straightforward when you know that the data will not change over the lifetime of the component.
+
+It's important to note that using `snapshot` is suitable for static data that does not change. If the data passed through the route is expected to change over time or based on user interaction, subscribing to the `data` observable as shown in the previous example would be more appropriate.
