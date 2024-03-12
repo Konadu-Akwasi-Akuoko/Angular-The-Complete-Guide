@@ -1133,3 +1133,57 @@ export class ErrorPageComponent implements OnInit {
 In this modified version of the `ErrorPageComponent`, the `ngOnInit` method directly assigns the static message passed through the route to the `errorMessage` property using `this.route.snapshot.data['message']`. This approach is simpler and more straightforward when you know that the data will not change over the lifetime of the component.
 
 It's important to note that using `snapshot` is suitable for static data that does not change. If the data passed through the route is expected to change over time or based on user interaction, subscribing to the `data` observable as shown in the previous example would be more appropriate.
+
+## Resolving dynamic data with the resolve guard
+
+The Resolve interface in Angular is used to pre-fetch data before a route is activated. This can be useful when you need to fetch dynamic data for a component based on route parameters.
+
+In your provided code, the ServerResolver service is implementing the Resolve interface. The resolve method is fetching a server based on the 'id' route parameter.
+
+Here's how you can use this ServerResolver in your routes:
+
+```TypeScript
+{
+  path: 'servers/:id',
+  component: ServerComponent,
+  resolve: { server: ServerResolver },
+},
+```
+
+In the above route, before the ServerComponent is activated, the ServerResolver's resolve method is called. The returned data is then available in the ServerComponent via the ActivatedRoute's data property.
+
+Here's how you can access this data in your ServerComponent:
+
+```TypeScript
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-server',
+  templateUrl: './server.component.html',
+  styleUrls: ['./server.component.css'],
+})
+export class ServerComponent implements OnInit {
+  server: { id: number; name: string; status: string };
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+      this.server = data['server'];
+    });
+  }
+}
+```
+
+In the above code, the ServerComponent is subscribing to the ActivatedRoute's data Observable. The server data that was resolved in the ServerResolver is then available under data['server'].
+
+## Understanding location stratiegies
+
+Hash style URLs use a # to indicate the start of the route path. For example, `http://localhost:4200/#/users` instead of `http://localhost:4200/users`. This can be useful for ensuring that your routes work correctly in older browsers that do not support the HTML5 history API.
+
+```TypeScript
+  imports: [RouterModule.forRoot(appRoutes, { useHash: true })],
+```
+
+However, in modern web development, it's more common to use the HTML5 style URLs (without the `#`), as they are cleaner and more user-friendly. You can achieve this by not including the useHash configuration, or setting it to false.

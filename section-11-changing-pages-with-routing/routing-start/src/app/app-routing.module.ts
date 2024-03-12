@@ -10,6 +10,7 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './auth-guard.service';
 import { CanDeactivateGuard } from './servers/edit-server/can-deactivate-guard.service';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { ServerResolver } from './servers/server/server-resolver.service';
 
 export const appRoutes: Routes = [
   {
@@ -36,6 +37,9 @@ export const appRoutes: Routes = [
       {
         path: ':id',
         component: ServerComponent,
+        resolve: {
+          server: ServerResolver,
+        },
       },
       {
         path: ':id/edit',
@@ -55,7 +59,7 @@ export const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [RouterModule.forRoot(appRoutes, { useHash: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
