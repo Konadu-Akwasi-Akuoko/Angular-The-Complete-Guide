@@ -11,12 +11,14 @@ export class RecipeService {
 
   private recipes: Recipe[] = [
     new Recipe(
+      1,
       'Tasty Rice',
       'A super-tasty rice - just awesome!',
       'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg',
       [new Ingredient('Rice', 1), new Ingredient('Water', 20)]
     ),
     new Recipe(
+      2,
       'Big fat steak',
       'Nothing better than a big fat steak!',
       'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg',
@@ -27,6 +29,7 @@ export class RecipeService {
       ]
     ),
     new Recipe(
+      3,
       'Spicy chicken',
       'Spicy chicken with a hint of lemon!',
       'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg',

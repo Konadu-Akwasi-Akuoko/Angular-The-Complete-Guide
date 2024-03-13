@@ -1,0 +1,9 @@
+.active a {
+  color: #fff;
+  background-color: #337ab7;
+}
+
+.active a:focus {
+  color: #fff;
+  background-color: #337ab7;
+}
