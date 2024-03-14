@@ -47,6 +47,10 @@ export class RecipeService {
     return this.recipes.slice();
   };
 
+  getRecipe(id: number): Recipe {
+    return this.recipes.filter((recipe: Recipe) => recipe.id == id)[0];
+  }
+
   addToIngredients(ingredient: Ingredient[]) {
     this.shoppingService.addToIngredients(ingredient);
   }

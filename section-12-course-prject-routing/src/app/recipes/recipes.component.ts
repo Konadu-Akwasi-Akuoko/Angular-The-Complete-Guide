@@ -9,12 +9,5 @@ import { ActivatedRoute } from '@angular/router';
 export class RecipesComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    let id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
-    this.route.params.subscribe((params) => {
-      let id = params['id'];
-      console.log(id);
-    });
-  }
+  ngOnInit(): void {}
 }
