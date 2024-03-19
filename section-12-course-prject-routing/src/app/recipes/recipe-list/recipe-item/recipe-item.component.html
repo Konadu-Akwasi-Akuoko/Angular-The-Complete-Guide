@@ -1,4 +1,10 @@
- <a [routerLink]="[recipe.id]" role="button" class="list-group-item clearfix " (click)="onSelected(recipe)">
+<a
+  [routerLink]="[recipe.id]"
+  [routerLinkActive]="'recipe-item-active'"
+  role="button"
+  class="list-group-item clearfix"
+  (click)="onSelected(recipe)"
+>
   <div class="pull-left">
     <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
     <p class="list-group-item-text">{{ recipe.description }}</p>
