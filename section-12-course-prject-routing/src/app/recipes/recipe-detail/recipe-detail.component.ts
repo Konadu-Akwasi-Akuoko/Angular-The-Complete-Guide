@@ -23,13 +23,12 @@ export class RecipeDetailComponent implements OnInit {
     this.route.params.subscribe((params) => {
       let id = params['id'];
       let recipeDetails = this.recipeService.getRecipe(id);
-
-      // If the recipe does not exist, redirect to the recipes page
+      // If the recipe does not exist, redirect to the recipes page, by early return
       if (!recipeDetails) {
-        this.router.navigate(['/recipes']);
-      } else {
-        this.selectedRecipe = this.recipeService.getRecipe(id);
+        return this.router.navigate(['/recipes']);
       }
+      this.selectedRecipe = this.recipeService.getRecipe(id);
+      
     });
 
     // this.recipeService.selectedRecipe.subscribe((recipe: Recipe) => {

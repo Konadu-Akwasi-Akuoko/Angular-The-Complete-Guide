@@ -8,21 +8,23 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './recipe-edit.component.css',
 })
 export class RecipeEditComponent implements OnInit {
+  private id: number;
+  public editMode: boolean;
+
   constructor(
     private recipeService: RecipeService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    this.id = null;
+    this.editMode = false;
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      let id = params['id'];
-      let recipeDetails = this.recipeService.getRecipe(id);
-
-      // If the recipe does not exist, redirect to the recipes page
-      if (!recipeDetails) {
-        this.router.navigate(['/recipes']);
-      }
+      this.id = params['id'];
+      // Check and see if the id is not null, if it is not null, then we are in edit mode, otherwise we are in new mode
+      this.editMode = this.id != null;
     });
   }
 }
