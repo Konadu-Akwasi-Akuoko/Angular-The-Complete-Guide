@@ -445,3 +445,289 @@ Another technique to avoid memory leaks is to use the `async` pipe. The `async` 
 ```
 
 In this case, you don't need to manually subscribe or unsubscribe. The `async` pipe takes care of it for you. This can make your code more concise and less error-prone.
+
+## Analyzing Angular observables
+
+Now with our knowledge about the observable design pattern, we can say that Observables in angular is any attribute of a class that can be observed by other classes or attributes in the same class. This is a common pattern in Angular, where components can subscribe to observables to get notified of changes.
+
+Observables are constructs to which you subscribe to, to get notified when a change occurs. They are used to handle asynchronous operations in Angular, such as HTTP requests, user input events, and timer events. Observables can emit multiple values over time, making them suitable for handling streams of data.
+
+So  we can say that in this `ngOnInit` the component has subscribed to the stream of data emitted by the `route.params` observable. Whenever the route parameters change, the component will be notified, and it will update the `id` property accordingly.
+
+```typescript
+  ngOnInit() {
+    this.route.params.subscribe({
+      next: (params: Params) => {
+        this.id = +params.id;
+      },
+      complete: () => {
+        console.log('completed');
+      },
+      error: () => {
+        console.log('error');
+      },
+    });
+  }
+```
+
+But you can omit the `complete` and `error` states, by just returning a single callback function like this:
+
+```typescript
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.id = +params.id;
+    });
+  }
+```
+
+## Getting closer to the core of observables in Angular
+
+Take a look at this code:
+
+```typescript
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+})
+export class HomeComponent implements OnInit, OnDestroy {
+  private firstObservableSubscription: Subscription;
+
+  constructor() {}
+
+  ngOnInit() {
+    this.firstObservableSubscription = interval(1000).subscribe((count) => {
+      console.log(count);
+    });
+  }
+
+  ngOnDestroy() {
+    this.firstObservableSubscription.unsubscribe();
+  }
+}
+
+```
+
+In Angular, creating observables, subscribing to them, and managing their lifecycle (especially unsubscribing to prevent memory leaks) is a common pattern, especially when dealing with asynchronous data streams. The code snippet above demonstrates this pattern using the RxJS library, which is a standard for reactive programming in Angular.
+
+Here's a breakdown of how it works:
+
+1. **Importing Required Modules**: First, you import the necessary modules from Angular and RxJS. In this case, `Component`, `OnDestroy`, and `OnInit` from Angular, and `interval` and `Subscription` from RxJS.
+
+    ```typescript
+    import { Component, OnDestroy, OnInit } from '@angular/core';
+    import { interval, Subscription } from 'rxjs';
+    ```
+
+2. **Component Declaration**: You declare your component using the `@Component` decorator, specifying its selector, template URL, and style URLs.
+
+    ```typescript
+    @Component({
+      selector: 'app-home',
+      templateUrl: './home.component.html',
+      styleUrls: ['./home.component.css'],
+    })
+    ```
+
+3. **Implementing OnInit and OnDestroy**: Your component class implements `OnInit` and `OnDestroy` interfaces. These interfaces provide lifecycle hooks that Angular calls at specific points in the component's lifecycle.
+
+    ```typescript
+    export class HomeComponent implements OnInit, OnDestroy {
+      private firstObservableSubscription: Subscription;
+    ```
+
+4. **Subscribing in ngOnInit**: In the `ngOnInit` lifecycle hook, you create an observable using `interval` and subscribe to it. The `interval` function creates an observable that emits a sequence of numbers at a specified interval (in this case, every 1000 milliseconds). You store the subscription in a private variable so you can unsubscribe later.
+
+    ```typescript
+    ngOnInit() {
+      this.firstObservableSubscription = interval(1000).subscribe((count) => {
+        console.log(count);
+      });
+    }
+    ```
+
+5. **Unsubscribing in ngOnDestroy**: In the `ngOnDestroy` lifecycle hook, you unsubscribe from the observable to prevent memory leaks. This is crucial because subscriptions can keep your application running even after the component is destroyed, leading to performance issues.
+
+    ```typescript
+    ngOnDestroy() {
+      this.firstObservableSubscription.unsubscribe();
+    }
+    ```
+
+This pattern ensures that your component subscribes to observables when it is initialized and unsubscribes when it is destroyed, managing the lifecycle of the subscription effectively.
+
+There are basically 5 ways to subscribe to observables, and they are:
+
+1. **Without Arguments**: If you call `subscribe` without any arguments, it will still work, but you won't be able to handle any values, errors, or completion notifications from the observable. This is not very useful in most cases.
+
+    ```typescript
+    observable.subscribe();
+    ```
+
+2. **With a Single Function Argument**: If you pass a single function as an argument to `subscribe`, that function will be treated as the `next` handler. This is a shorthand for subscribing to the observable and handling its emitted values.
+
+    ```typescript
+    observable.subscribe(value => console.log(value));
+    ```
+
+3. **With Two Function Arguments**: If you pass two functions as arguments to `subscribe`, the first function will be treated as the `next` handler, and the second function will be treated as the `error` handler. This allows you to handle both values and errors from the observable.
+
+    ```typescript
+    observable.subscribe(
+      value => console.log(value),
+      error => console.error(error)
+    );
+    ```
+
+4. **With Three Function Arguments**: If you pass three functions as arguments to `subscribe`, the first function will be treated as the `next` handler, the second function will be treated as the `error` handler, and the third function will be treated as the `complete` handler. This allows you to handle values, errors, and completion notifications from the observable.
+
+    ```typescript
+    observable.subscribe(
+      value => console.log(value),
+      error => console.error(error),
+      () => console.log('Observable completed')
+    );
+    ```
+
+5. **With an Object Argument**: If you pass an object as an argument to `subscribe`, the object can have `next`, `error`, and `complete` properties, each of which can be a function. This is a more flexible way to subscribe to an observable, as it allows you to specify handlers for each type of notification.
+
+    ```typescript
+    observable.subscribe({
+      next: value => console.log(value),
+      error: error => console.error(error),
+      complete: () => console.log('Observable completed')
+    });
+    ```
+
+In summary, the `subscribe` method in RxJS is quite flexible and can be used in various ways to handle different types of notifications from observables. The behavior you've observed is consistent with how `subscribe` is designed to work, allowing for different levels of detail in how you handle observable notifications.
+
+Also when you call `subscriber.error` or `subscriber.complete` within an Observable (`new Observable()`), it triggers the error handling mechanism/the complete mechanism of the Observable, and the Observable stops emitting any further values. This behavior is by design in RxJS, the library that provides Observables in Angular and many other JavaScript frameworks. The purpose of this design is to ensure that once an error occurs in the Observable sequence, no further processing is attempted, and the error is propagated to the subscribers.
+
+Here's a breakdown of what happens when you use `subscriber.error` in an Observable:
+
+1. **Error Handling**: When `subscriber.error` is called, it signals that an error has occurred in the Observable sequence. This is intended to stop the Observable from emitting any more values.
+
+2. **Stopping the Observable**: The Observable stops emitting values immediately after `subscriber.error` is called. This means that any `subscriber.next` calls that come after `subscriber.error` will not be executed.
+
+3. **Error Propagation**: The error passed to `subscriber.error` is propagated to the subscribers of the Observable. This allows subscribers to handle the error appropriately, for example, by logging the error, displaying an error message to the user, or performing some cleanup operations.
+
+4. **No Further Processing**: Once an error is emitted, the Observable is considered to be in an "errored" state, and no further processing is attempted. This includes not calling any more `subscriber.next` or `subscriber.complete` handlers.
+
+Here's an example to illustrate this behavior:
+
+```typescript
+const customIntervalObservable = new Observable((subscriber) => {
+ subscriber.next(2);
+ subscriber.error('An error occurred');
+ subscriber.next(0); // This will not be called
+ subscriber.next(1); // This will not be called
+ subscriber.next(2); // This will not be called
+});
+
+customIntervalObservable.subscribe({
+ next: (data) => {
+    console.log(data); // This will only log "2"
+ },
+ error: (error) => {
+    console.log(error); // This will log "An error occurred"
+ },
+ complete: () => {
+    console.log('completed'); // This will not be called
+ },
+});
+```
+
+In this example, the Observable emits the value `2` and then immediately encounters an error. The `next` calls that follow the error are not executed, and the Observable stops emitting values. The error is then propagated to the subscriber, which logs the error message.
+
+This design ensures that errors in Observable sequences are handled promptly and that no further processing is attempted after an error, preventing potential issues and making error handling more predictable and manageable.
+
+## Building a custom observable in Angular
+
+Custom `Observables` can be particularly useful when the standard patterns provided by RxJS, such as interval, from, or of, do not fit your needs.
+
+Let's break down these standard patterns:
+
+- interval: This is a function that creates an Observable that emits a sequence of numbers every specified interval of time. For example, you could use it to emit a number every second.
+- from: This function turns an array, promise, or iterable into an Observable. This is useful when you have data that you want to process as an Observable.
+- of: This function creates an Observable that emits the arguments you provide to it, then completes. This can be useful when you have a fixed set of values that you want to emit as an Observable.
+
+However, there might be cases where these standard patterns do not cover your requirements. In such cases, you would need to create a custom Observable. This could involve defining your own way of producing values and handling subscriptions, which gives you the maximum amount of flexibility.
+
+Creating a new Observable in RxJS involves using the `new Observable` constructor, which allows you to define custom behavior for the Observable. This is particularly useful when you need to create an Observable that doesn't fit the standard patterns provided by RxJS, such as `interval`, `from`, or `of`.
+
+Here's a step-by-step guide on how to create a new Observable using the `new Observable` constructor:
+
+1. **Import Observable**: First, ensure you have imported `Observable` from `rxjs`.
+
+    ```typescript
+    import { Observable } from 'rxjs';
+    ```
+
+2. **Create a New Observable**: Use the `new Observable` constructor to create a new Observable. The constructor takes a function as an argument, which itself takes a `Subscriber` object. The `Subscriber` object has methods like `next`, `error`, and `complete` that you can call to emit values, errors, or complete the Observable.
+
+    ```typescript
+    const myObservable = new Observable(subscriber => {
+      // Custom logic here
+    });
+    ```
+
+3. **Emitting Values**: To emit values, call the `next` method on the `Subscriber` object. You can call this method multiple times to emit multiple values.
+
+    ```typescript
+    const myObservable = new Observable(subscriber => {
+      subscriber.next('Hello');
+      subscriber.next('World');
+    });
+    ```
+
+4. **Handling Errors**: If an error occurs, you can call the `error` method on the `Subscriber` object, passing the error as an argument. This will stop the Observable from emitting any further values.
+
+    ```typescript
+    const myObservable = new Observable(subscriber => {
+      subscriber.next('Hello');
+      subscriber.error(new Error('An error occurred'));
+    });
+    ```
+
+5. **Completing the Observable**: To signal that the Observable has finished emitting values, call the `complete` method on the `Subscriber` object. This is optional and is typically used when you know the Observable will not emit any more values.
+
+    ```typescript
+    const myObservable = new Observable(subscriber => {
+      subscriber.next('Hello');
+      subscriber.next('World');
+      subscriber.complete();
+    });
+    ```
+
+6. **Subscribing to the Observable**: Finally, to start receiving values from the Observable, you need to subscribe to it. You can do this by calling the `subscribe` method on the Observable, passing an object with `next`, `error`, and `complete` methods, or by passing individual functions for each.
+
+    ```typescript
+    myObservable.subscribe({
+      next: value => console.log(value),
+      error: error => console.error(error),
+      complete: () => console.log('Completed')
+    });
+    ```
+
+Here's a complete example:
+
+```typescript
+import { Observable } from 'rxjs';
+
+const myObservable = new Observable(subscriber => {
+ subscriber.next('Hello');
+ subscriber.next('World');
+ subscriber.complete();
+});
+
+myObservable.subscribe({
+ next: value => console.log(value),
+ error: error => console.error(error),
+ complete: () => console.log('Completed')
+});
+```
+
+This example creates a simple Observable that emits two values, "Hello" and "World", and then completes. The subscriber logs each value and the completion message to the console.
