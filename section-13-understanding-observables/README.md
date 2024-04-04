@@ -365,7 +365,7 @@ The Observer Pattern helps decouple the weather monitoring system from the compo
 
 ## What is an observable in Angular?
 
-In Angular, an **Observable** is a stream of events or data that happen asynchronously. It's an object that can emit one or more values over time¹. Observables are often returned from Angular methods, such as `http.get` and `myinputBox.valueChanges`. Here's a simple observable that emits 1, then 2, then 3, and then completes:
+In Angular, an **Observable** is a stream of events or data that happen asynchronously. It's an object that can emit one or more values over time. Observables are often returned from Angular methods, such as `http.get` and `myinputBox.valueChanges`. Here's a simple observable that emits 1, then 2, then 3, and then completes:
 
 ```typescript
 import { of } from 'rxjs';
@@ -407,3 +407,41 @@ When an observer subscribes to an Observable/Subject, it gets three types of not
 3. **Complete**: When the Observable has finished emitting values, it will call the `complete` function to signal that it's done. In your code, `() => console.log('the end')` is the `complete` function. After the Observable has emitted `10`, `20`, `30`, and `"hello"`, it will call this function, and it will log `the end`.
 
 Thus, when you subscribe to an Observable, you provide handlers for these three types of notifications: `next`, `error`, and `complete`. This allows you to handle new values, errors, and the completion of the Observable stream.
+
+### Memory leaks in Observables
+
+Observables in Angular can lead to memory leaks if not handled properly. This is because Observables do not destroy themselves after emitting values. They keep listening for new values until explicitly told to stop. If an Observable is not unsubscribed from, it continues to exist and consume memory, leading to a memory leak.
+
+To mitigate this, you need to unsubscribe from Observables when they are no longer needed. This is typically done in the `ngOnDestroy` lifecycle hook of the component that subscribes to the Observable. Here's an example:
+
+```typescript
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { of, Subscription } from 'rxjs';
+
+@Component({
+  template: `...`,
+})
+export class MyComponent implements OnInit, OnDestroy {
+  private myObservable$: Observable<number>;
+  private subscription: Subscription;
+
+  ngOnInit() {
+    this.myObservable$ = of(10, 20, 30);
+    this.subscription = this.myObservable$.subscribe(value => console.log(value));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+}
+```
+
+In this example, `ngOnInit` subscribes to `myObservable$`, and `ngOnDestroy` unsubscribes from it. This ensures that the Observable is cleaned up when the component is destroyed, preventing memory leaks.
+
+Another technique to avoid memory leaks is to use the `async` pipe. The `async` pipe automatically subscribes to the Observable, triggers Angular’s change detection when needed, and importantly, it automatically unsubscribes from the Observable when the component is destroyed. Here's how you can use it:
+
+```html
+<div> {{myObservable$ | async}} </div>
+```
+
+In this case, you don't need to manually subscribe or unsubscribe. The `async` pipe takes care of it for you. This can make your code more concise and less error-prone.
