@@ -6,10 +6,12 @@ const observer = numbersObservable$.subscribe((number) => {
   console.log(number);
 });
 
-of(10, 20, 30, "hello").subscribe({
-  next: (value) => console.log("next:", value),
-  error: (err) => console.log("error:", err),
-  complete: () => console.log("the end"),
-}).unsubscribe();
+of(10, 20, 30, "hello")
+  .subscribe({
+    next: (value) => console.log("next:", value),
+    error: (err) => console.log("error:", err),
+    complete: () => console.log("the end"),
+  })
+  .unsubscribe();
 
-observer.unsubscribe()
+observer.unsubscribe();

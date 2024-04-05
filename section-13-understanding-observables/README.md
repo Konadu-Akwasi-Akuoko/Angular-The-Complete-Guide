@@ -644,6 +644,46 @@ In this example, the Observable emits the value `2` and then immediately encount
 
 This design ensures that errors in Observable sequences are handled promptly and that no further processing is attempted after an error, preventing potential issues and making error handling more predictable and manageable.
 
+**NB:** Note that an `Observable` is a unicast stream, meaning that each subscribed observer owns an independent execution of the Observable. This is in contrast to a multicast stream, where multiple observers share the same execution of the Observable. When an error occurs in a unicast stream, it only affects the observer that encountered the error, while the other observers continue to receive values. This is another reason why errors in Observables are handled in a way that stops the Observable from emitting further values.
+
+If you look at the below example, each subscription receives the different values as observables developed as unicast by design.
+
+```typescript
+import {Observable} from 'rxjs';
+
+let obs = new Observable<any>(observer=>{
+   observer.next(Math.random());
+})
+
+obs.subscribe(res=>{
+  console.log('subscription a :', res); //subscription a :0.2859800202682865
+});
+
+obs.subscribe(res=>{
+  console.log('subscription b :', res); //subscription b :0.694302021731573
+});
+```
+
+This could be weird if you are expecting the same values on both the subscription.
+
+We can overcome this issue using **Subjects**. **Subjects is similar to event-emitter and it does not invoke for each subscription. Consider the below example.** Subjects are the true implementation of the observable design pattern we discussed earlier.
+
+```typescript
+import {Subject} from 'rxjs';
+
+let obs = new Subject();
+
+obs.subscribe(res=>{
+  console.log('subscription a :', res); // subscription a : 0.91767565496093
+});
+
+obs.subscribe(res=>{
+  console.log('subscription b :', res);// subscription b : 0.91767565496093
+});
+
+obs.next(Math.random());
+```
+
 ## Building a custom observable in Angular
 
 Custom `Observables` can be particularly useful when the standard patterns provided by RxJS, such as interval, from, or of, do not fit your needs.
@@ -828,4 +868,237 @@ Observables are a powerful tool in Angular for handling asynchronous operations 
 
 ## Understanding operators
 
+Operators are functions that build on the observables foundation to enable sophisticated manipulation of asynchronous data streams. They allow you to transform, filter, combine, and create new observables from existing ones. Operators are the building blocks of reactive programming in Angular and are essential for working with observables effectively. Operators are between the subscribing to an observable and getting the data from the observable. They allow you to transform, filter, combine, and manipulate the data emitted by the observable before it reaches the subscriber.
 
+There are many operators available in RxJS, and they can be categorized into different types based on their functionality:
+
+1. **Creation Operators**: These operators are used to create new observables from scratch. Examples include `of`, `from`, `interval`, and `timer`.
+2. **Transformation Operators**: These operators are used to transform the data emitted by an observable. Examples include `map`, `pluck`, `switchMap`, and `mergeMap`.
+3. **Filtering Operators**: These operators are used to filter the data emitted by an observable based on certain criteria. Examples include `filter`, `take`, `skip`, and `distinct`.
+4. **Combination Operators**: These operators are used to combine multiple observables into a single observable. Examples include `combineLatest`, `merge`, `concat`, and `zip`.
+5. **Multicasting Operators**: These operators are used to share the execution of an observable among multiple subscribers. Examples include `share`, `publish`, and `multicast`.
+6. **Error Handling Operators**: These operators are used to handle errors emitted by an observable. Examples include `catchError`, `retry`, and `throwError`.
+7. **Utility Operators**: These operators are used for various utility functions, such as logging, timing, and debugging. Examples include `tap`, `delay`, and `finalize`.
+8. **Conditional Operators**: These operators are used to conditionally emit values from an observable. Examples include `defaultIfEmpty`, `every`, and `find`.
+9. **Mathematical and Aggregate Operators**: These operators are used to perform mathematical and aggregate operations on the data emitted by an observable. Examples include `reduce`, `count`, and `max`.
+10. **Time-based Operators**: These operators are used to work with time and timing-related operations. Examples include `debounceTime`, `throttleTime`, and `timeout`.
+
+This is in no form the exhaustive list of operators in RxJS, but it gives you an idea of the different types of operators available and the kinds of operations you can perform with them. By mastering these operators, you can work with observables more effectively and build more powerful and responsive applications in Angular. Some of the most used operators in RxJS are `map`, `filter`, `tap`, `switchMap`, `mergeMap`, `catchError`, `combineLatest`, `debounceTime`, and `distinctUntilChanged`.
+
+Note that pipe is not an operator of RxJS rather it is a method that allows you to chain multiple operators together to create a pipeline of operations on an observable. The `pipe` method takes one or more operators as arguments and applies them sequentially to the observable. This allows you to perform complex transformations and manipulations on the data emitted by the observable in a clean and readable way.
+
+Let's take a look at how you can use the `pipe` method to chain operators together:
+
+```typescript
+ customIntervalObservable
+      .pipe(
+        filter((data) => {
+          if ((data as number) % 2 == 0) {
+            return true;
+          }
+
+          return false;
+        })
+      )
+      .pipe(map((data) => "Round " + data))
+      .subscribe({
+        next: (data) => {
+          this.observer = data;
+          console.log(this.observer);
+        },
+        error: (error) => {
+          console.log(error);
+          alert(error.message);
+        },
+        complete: () => {
+          console.log("completed");
+        },
+      });
+  }
+```
+
+The above code snippet demonstrates the use of RxJS operators within an Angular application to manipulate an observable stream. Let's break down the code to align it with the notes selected from the README.md file:
+
+- **Transformation Operator**: The `pipe` method is used to chain multiple operators together. Inside the first `pipe`, the `filter` operator is used. Filtering operators are used to filter the data emitted by an observable based on certain criteria. Here, the `filter` operator is used to only allow even numbers to pass through the observable stream:
+
+```typescript
+filter((data) => {
+  if ((data as number) % 2 == 0) {
+    return true;
+  }
+
+  return false;
+})
+```
+
+- **Transformation Operator (Continued)**: After filtering, another `pipe` is used, this time with the `map` operator. Transformation operators are used to transform the data emitted by an observable. The `map` operator is used here to prepend the string "Round " to each even number emitted by the observable:
+
+```typescript
+map((data) => "Round " + data)
+```
+
+- **Subscription**: Finally, the `subscribe` method is used to subscribe to the observable. This is where the actual data flow begins. The subscription object contains three callbacks: `next`, `error`, and `complete`.
+  - `next`: This callback is executed for each value emitted by the observable. In this case, it updates `this.observer` with the transformed data and logs it to the console.
+  - `error`: This callback is executed if an error occurs in the observable stream. It logs the error to the console and shows an alert with the error message.
+  - `complete`: This callback is executed when the observable completes, indicating that no more values will be emitted. It logs "completed" to the console.
+
+This code snippet demonstrates the use of creation, filtering, and transformation operators to manipulate an observable stream in an Angular application. It also shows how to subscribe to an observable and handle the data flow, errors, and completion of the observable.
+
+## Subjects
+
+Subjects are a special type of Observable that allows values to be multicasted to many Observers. While plain Observables are unicast (each subscribed Observer owns an independent execution of the Observable), Subjects are multicast.
+
+> **Multicast vs Unicast:** In a multicast scenario, multiple Observers can subscribe to the same Subject, and the Subject will emit values to all of them (`new Subject()`). In contrast, in a unicast scenario, each Observer gets its own independent execution of the Observable, and values are not shared between Observers(`new Observables()`).
+
+Take a look at the codes below:
+
+user.service.ts:
+
+```typescript
+import { Injectable } from "@angular/core";
+import { Observable, Subject } from "rxjs";
+
+@Injectable({
+  providedIn: "root",
+})
+export class UserService {
+  isActivated: boolean;
+  isActivated$: Subject<boolean>;
+
+  constructor() {
+    this.isActivated$ = new Subject<boolean>();
+    this.isActivated = false;
+    this.isActivated$.next(this.isActivated);
+  }
+
+  onActivateChanged() {
+    this.isActivated = !this.isActivated;
+    console.log(this.isActivated)
+    this.isActivated$.next(this.isActivated);
+  }
+}
+```
+
+app.component.ts:
+
+```typescript
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { UserService } from "./user.service";
+
+@Component({
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
+})
+export class AppComponent implements OnInit, OnDestroy {
+  public isActivated: boolean;
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.isActivated$.subscribe({
+      next: (data) => {
+        this.isActivated = data;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {
+        console.log("completed");
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.userService.isActivated$.unsubscribe();
+  }
+}
+```
+
+app.component.html:
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <a routerLink="/">Home</a> |
+      <a [routerLink]="['user', 1]"> User 1 </a>
+      |
+      <a [routerLink]="['user', 2]"> User 2 </a>
+    </div>
+  </div>
+  <hr />
+  <p *ngIf="isActivated">Activated</p>
+  <hr />
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+```
+
+Now let's us break it down.
+
+In the `UserService` class, a `Subject` named `isActivated$` is declared. A `Subject` in RxJS is a special type of Observable that allows values to be multicasted to many Observers. Unlike Observables, Subjects maintain a registry of many listeners.
+
+```typescript
+isActivated$: Subject<boolean>;
+```
+
+In the constructor of `UserService`, `isActivated$` is initialized as a new `Subject` and the initial value of `isActivated` is emitted.
+
+```typescript
+constructor() {
+  this.isActivated$ = new Subject<boolean>();
+  this.isActivated = false;
+  this.isActivated$.next(this.isActivated);
+}
+```
+
+The `onActivateChanged` method toggles the value of `isActivated` and emits the new value through `isActivated$`.
+
+```typescript
+onActivateChanged() {
+  this.isActivated = !this.isActivated;
+  console.log(this.isActivated)
+  this.isActivated$.next(this.isActivated);
+}
+```
+
+In `AppComponent`, `isActivated$` is subscribed to in the `ngOnInit` method. This means that whenever a new value is emitted from `isActivated$`, the callback provided to `subscribe` will be executed, updating the value of `isActivated` in `AppComponent`.
+
+```typescript
+ngOnInit() {
+  this.userService.isActivated$.subscribe({
+    next: (data) => {
+      this.isActivated = data;
+    },
+    error: (error) => {
+      console.log(error);
+    },
+    complete: () => {
+      console.log("completed");
+    },
+  });
+}
+```
+
+Finally, in `ngOnDestroy`, the subscription to `isActivated$` is unsubscribed to prevent memory leaks.
+
+```typescript
+ngOnDestroy(): void {
+  this.userService.isActivated$.unsubscribe();
+}
+```
+
+In the HTML template of `AppComponent`, `isActivated` is used with the `*ngIf` directive to conditionally render a paragraph.
+
+```html
+<p *ngIf="isActivated">Activated</p>
+```
+
+This means that the paragraph will only be displayed when `isActivated` is `true`. The value of `isActivated` is updated whenever a new value is emitted from `isActivated$`, allowing for reactive updates to the UI based on the state of `isActivated`.
+
+This pattern demonstrates a powerful aspect of reactive programming with RxJS: the ability to create a single source of truth (isActivated in UserService) that can be observed and reacted to by multiple parts of an application. This approach simplifies state management, especially in complex applications where state needs to be shared across many components or services.
+
+In summary, `Subject` in RxJS is a powerful tool for multicasting values to multiple Observers and is used in this code to reactively update the state of the application. It's important to remember to unsubscribe from Subjects when they are no longer needed to prevent memory leaks. I hope this explanation helps! Let me know if you have any other questions.
