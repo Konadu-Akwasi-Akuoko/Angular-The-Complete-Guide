@@ -9,7 +9,12 @@ import { interval, Observable, Subscription } from 'rxjs';
 export class HomeComponent implements OnInit, OnDestroy {
   private firstObservableSubscription: Subscription;
 
-  constructor() {}
+  private customObs = new Observable<number>();
+
+  constructor() {
+  }
+
+  private observer;
 
   ngOnInit() {
     // this.firstObservableSubscription = interval(1000).subscribe((count) => {
@@ -17,17 +22,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     // });
 
     const customIntervalObservable = new Observable((subscriber) => {
-      subscriber.next(3);
-      subscriber.next(0);
-      subscriber.next(1);
-      subscriber.next(2);
-      // subscriber.error('error');
-      subscriber.complete();
+      let count = 0;
+      setInterval(() => {
+        subscriber.next(count);
+        count++;
+        if (count === 11) {
+          subscriber.complete();
+        }
+      }, 1000);
     });
 
     customIntervalObservable.subscribe({
       next: (data) => {
-        console.log(data);
+        this.observer = data;
+        console.log(this.observer);
       },
       error: (error) => {
         console.log(error);
