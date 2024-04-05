@@ -773,3 +773,59 @@ The Observable design pattern is implemented using RxJS, a library for reactive 
      },
    });
    ```
+
+## Error and completion handling in an observer/subscriber
+
+In RxJS, Observables can emit three types of notifications: `next`, `error`, and `complete`. These notifications are handled by the `next`, `error`, and `complete` methods of the Observer/Subscriber object passed to the `subscribe` method.
+
+1. **Next Notification**: The `next` notification is used to emit a value from the Observable. This is the most common type of notification and is used to pass data from the Observable to the Observer. The `next` method of the Observer is called with the emitted value.
+
+2. **Error Notification**: The `error` notification is used to signal that an error has occurred in the Observable sequence. When an error occurs, the `error` method of the Observer is called with the error object. After an error is emitted, the Observable stops emitting values, and no further processing is attempted.
+
+3. **Complete Notification**: The `complete` notification is used to signal that the Observable has finished emitting values and will not emit any more values. When the Observable completes, the `complete` method of the Observer is called. This is typically used to perform cleanup operations or to signal that the Observable has completed its task.
+
+Here's an example that demonstrates error and completion handling in Observables, note that the subscription must happen in the `ngOnInit` lifecycle hook and the unsubscription in the `ngOnDestroy` lifecycle hook to prevent memory leaks(we did not necessarily do that here):
+
+```typescript
+import { Observable } from 'rxjs';
+
+const customObservable = new Observable(subscriber => {
+  subscriber.next(1);
+  subscriber.next(2);
+  subscriber.error(new Error('An error occurred'));
+  subscriber.next(3); // This will not be called
+  subscriber.complete(); // This will not be called
+});
+
+customObservable.subscribe({
+  next: value => console.log(value),
+  error: error => console.error(error),
+  complete: () => console.log('Completed')
+});
+
+// Or you can use this shorthand syntax:
+customObservable.subscribe(
+  value => console.log(value),
+  error => console.error(error),
+  () => console.log('Completed')
+);
+
+// Or if you want to just listen to the next and error values:
+customObservable.subscribe(
+  value => console.log(value),
+  error => console.error(error)
+);
+
+// Or if you want to just listen to the next values:
+customObservable.subscribe(value => console.log(value));
+```
+
+Always note that the `subscriber.complete()` will never be called in this example because the `subscriber.error(new Error('An error occurred'))` was called before it, and the `subscriber.next(3)` will also not be called because the `subscriber.error(new Error('An error occurred'))` was called before it. When the error argument is called the Observable stops emitting values and the `complete` method is not called.
+
+## Observable and You
+
+Observables are a powerful tool in Angular for handling asynchronous operations and data streams. They allow you to work with data over time, handle events, and manage complex interactions in a reactive and efficient way. By understanding how Observables work and how to use them effectively, you can build more robust and responsive applications with an event-driven architecture.
+
+## Understanding operators
+
+

@@ -11,8 +11,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private customObs = new Observable<number>();
 
-  constructor() {
-  }
+  constructor() {}
 
   private observer;
 
@@ -26,6 +25,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       setInterval(() => {
         subscriber.next(count);
         count++;
+        if (count === 10) {
+          subscriber.error(new Error('Count is greater than 10'));
+        }
         if (count === 11) {
           subscriber.complete();
         }
@@ -39,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.log(error);
+        alert(error.message);
       },
       complete: () => {
         console.log('completed');
