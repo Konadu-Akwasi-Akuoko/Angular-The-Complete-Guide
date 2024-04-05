@@ -731,3 +731,45 @@ myObservable.subscribe({
 ```
 
 This example creates a simple Observable that emits two values, "Hello" and "World", and then completes. The subscriber logs each value and the completion message to the console.
+
+### Components of the observable design pattern in Angular
+
+The Observable design pattern is implemented using RxJS, a library for reactive programming using Observables. Let's break down the different parts of the Observable design pattern and see how they correspond to the code, note that we said earlier that there are 4 parts of an observable design pattern:
+
+1. **Subject Interface**: In the context of RxJS, the `Subject` is a special type of Observable that allows values to be multicasted to many Observers. In RxJs we does not explicitly use a `Subject Interface`, but the `Observable` demonstrates the concept of an Observable that can be subscribed to by multiple observers.
+
+2. **Observer Interface**: Just as the subject interface, over here too the rxjs library does not explicitly provide a way for us to do the object interface, but we can say that any argument passed to the subscribe method is an interface on it's own, albeit a concrete one. The Observer interface defines the methods that an observer must implement to receive notifications from the Observable. So basically the object passed to the `subscribe` method implements the Observer interface, defining how to handle the values emitted by the Observable.
+
+3. **Subject Implementation**: The `Subject` implementation in RxJS is a concrete class that implements the Observable interfaces. It allows values to be multicasted to many Observers using the `next()` method of subscribers. RxJs does not directly use a `Subject`, but it demonstrates the creation of a custom Observable using the `Observable` constructor, which is a form of implementing the Observable interface:
+
+   ```typescript
+   const customIntervalObservable = new Observable((subscriber) => {
+     let count = 0;
+     setInterval(() => {
+       subscriber.next(count);
+       count++;
+       if (count === 11) {
+         subscriber.complete();
+       }
+     }, 1000);
+   });
+   ```
+
+   This custom Observable acts as a Subject in the sense that it can emit values to its subscribers.
+
+4. **One or More Observer Implementation**: This is where we implement the observer interface, thus what to do in the update method, just like what we did at first(check the first sub topic of this chapter). The object passed to the `subscribe` method is the implementation. This Observer listens to the values emitted by the Observable, handles errors, and reacts to the completion of the Observable. Here, the object passed to `subscribe` is the Observer, and it defines how to handle the values emitted by the Observable (`next`), any errors that occur (`error`), and when the Observable completes (`complete`). The Observer interface is implemented in the object passed to the `subscribe` method:
+
+   ```typescript
+   customIntervalObservable.subscribe({
+     next: (data) => {
+       this.observer = data;
+       console.log(this.observer);
+     },
+     error: (error) => {
+       console.log(error);
+     },
+     complete: () => {
+       console.log('completed');
+     },
+   });
+   ```
