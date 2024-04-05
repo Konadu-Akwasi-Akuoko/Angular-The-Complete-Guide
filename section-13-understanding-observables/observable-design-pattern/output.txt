@@ -1,0 +1,11 @@
+Phone display weather updated: sunny
+TV display weather updated: sunny
+Watch display weather updated: sunny
+
+Phone display weather updated: rainy
+TV display weather updated: rainy
+Watch display weather updated: rainy
+
+Phone display weather updated: snowy
+TV display weather updated: snowy
+Watch display weather updated: snowy

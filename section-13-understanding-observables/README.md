@@ -1102,3 +1102,43 @@ This means that the paragraph will only be displayed when `isActivated` is `true
 This pattern demonstrates a powerful aspect of reactive programming with RxJS: the ability to create a single source of truth (isActivated in UserService) that can be observed and reacted to by multiple parts of an application. This approach simplifies state management, especially in complex applications where state needs to be shared across many components or services.
 
 In summary, `Subject` in RxJS is a powerful tool for multicasting values to multiple Observers and is used in this code to reactively update the state of the application. It's important to remember to unsubscribe from Subjects when they are no longer needed to prevent memory leaks. I hope this explanation helps! Let me know if you have any other questions.
+
+### Cold(`new Observables()`) vs Hot(`new Subject()`) observables
+
+In RxJS, the terms "hot" and "cold" are used to describe the behavior of Observables when it comes to producing values.
+
+A **cold Observable** starts running upon subscription. It means the data is produced inside the Observable and the Observable is the sole producer of the data it emits. Each subscriber gets its own independent set of values. So, if you subscribe to a cold Observable multiple times, each subscription will get a new set of values. The values are "cold" because they're created on demand for each subscriber.
+
+On the other hand, a **hot Observable** produces values even before subscription starts, and these values are shared among all subscribers. It doesn't matter when you subscribe to a hot Observable; you'll get all values that are emitted after you subscribe. The source of a hot Observable is typically outside of the Observable itself. Subjects in RxJS are hot because they share the same execution path among multiple subscribers.
+
+Here's an analogy: think of a cold Observable as a movie streaming service like Netflix. Each subscriber (or viewer) can start, pause, rewind, or fast-forward their own movie independently. But a hot Observable is like a live concert broadcast on TV. The show goes on regardless of when and how many viewers start watching, and all viewers see the same show at the same time.
+
+**Cold Observable:**
+
+```typescript
+import { Observable } from 'rxjs';
+
+const cold$ = new Observable(subscriber => {
+  subscriber.next(Math.random());
+});
+
+cold$.subscribe(value => console.log(`Subscriber 1: ${value}`));
+cold$.subscribe(value => console.log(`Subscriber 2: ${value}`));
+```
+
+In this example, each subscriber to `cold$` will receive a different random number because the data is produced inside the Observable and each subscription gets its own set of values.
+
+**Hot Observable (Subject):**
+
+```typescript
+import { Subject } from 'rxjs';
+
+const hot$ = new Subject();
+
+hot$.next(Math.random());
+
+hot$.subscribe(value => console.log(`Subscriber 1: ${value}`));
+hot$.subscribe(value => console.log(`Subscriber 2: ${value}`));
+```
+
+In this example, both subscribers to `hot$` will receive the same random number because the value is produced outside of the Observable and shared among all subscribers. In a real-world application, you might use a Subject to multicast events or values that are produced by user interactions, websockets, or other asynchronous APIs to multiple subscribers.

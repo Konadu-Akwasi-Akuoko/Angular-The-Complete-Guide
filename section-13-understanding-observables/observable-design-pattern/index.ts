@@ -24,6 +24,8 @@ await new Promise((resolve) => setTimeout(resolve, 1000));
 
 // Simulating weather change
 weatherStation.setWeather("sunny");
+weatherStation.setWeather("rainy");
+weatherStation.setWeather("snowy");
 
 console.error("Waiting for 1 second before continuing");
 await new Promise((resolve) => setTimeout(resolve, 1000));
