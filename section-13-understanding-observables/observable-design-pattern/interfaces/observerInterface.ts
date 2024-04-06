@@ -1,3 +1,3 @@
-export interface Observer{
-    update : (weather : string) => void;
+export interface Observer {
+  update: (weather: string) => void;
 }

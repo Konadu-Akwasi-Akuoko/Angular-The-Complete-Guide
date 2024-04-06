@@ -50,3 +50,11 @@ console.error("Waiting for 1 second before continuing");
 await new Promise((resolve) => setTimeout(resolve, 1000));
 
 weatherStation.listObservers();
+
+/**
+ * Output:
+ * Waiting for 1 second before continuing
+ * Observer added:{
+ *  "weather": "",
+ * "name": "Phone Display"
+ */
