@@ -1124,6 +1124,12 @@ const cold$ = new Observable(subscriber => {
 
 cold$.subscribe(value => console.log(`Subscriber 1: ${value}`));
 cold$.subscribe(value => console.log(`Subscriber 2: ${value}`));
+
+/**
+ * Output:
+ * Subscriber 1: 0.1419631721320307
+ * Subscriber 2: 0.3762698451548453
+ */
 ```
 
 In this example, each subscriber to `cold$` will receive a different random number because the data is produced inside the Observable and each subscription gets its own set of values.
@@ -1135,10 +1141,16 @@ import { Subject } from 'rxjs';
 
 const hot$ = new Subject();
 
-hot$.next(Math.random());
-
 hot$.subscribe(value => console.log(`Subscriber 1: ${value}`));
 hot$.subscribe(value => console.log(`Subscriber 2: ${value}`));
+
+hot$.next(Math.random());
+
+/**
+ * Output:
+ * Subscriber 1: 0.3877064098668468
+ * Subscriber 2: 0.3877064098668468
+ */
 ```
 
 In this example, both subscribers to `hot$` will receive the same random number because the value is produced outside of the Observable and shared among all subscribers. In a real-world application, you might use a Subject to multicast events or values that are produced by user interactions, websockets, or other asynchronous APIs to multiple subscribers.
