@@ -3463,6 +3463,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: false
     bundledDependencies:
       - napi-wasm
@@ -4587,7 +4588,7 @@ packages:
   /axios@0.21.4(debug@4.3.2):
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.3(debug@4.3.2)
+      follow-redirects: 1.15.5(debug@4.3.2)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -4899,7 +4900,7 @@ packages:
       etag: 1.8.1
       fresh: 0.5.2
       fs-extra: 3.0.1
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.4)
       immutable: 3.8.2
       localtunnel: 2.0.2
       micromatch: 4.0.5
@@ -6883,6 +6884,7 @@ packages:
 
   /file-uri-to-path@1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: false
 
   /filename-reserved-regex@3.0.0:
@@ -7027,8 +7029,8 @@ packages:
       from2: 2.3.0
     dev: false
 
-  /follow-redirects@1.15.3(debug@4.3.2):
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
+  /follow-redirects@1.15.5(debug@4.3.2):
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -7039,8 +7041,8 @@ packages:
       debug: 4.3.2
     dev: true
 
-  /follow-redirects@1.15.3(debug@4.3.4):
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
+  /follow-redirects@1.15.5(debug@4.3.4):
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -7049,7 +7051,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4(supports-color@9.4.0)
-    dev: false
 
   /for-in@1.0.2:
     resolution: {integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ==}
@@ -7628,7 +7629,7 @@ packages:
     dependencies:
       '@types/express': 4.17.21
       '@types/http-proxy': 1.17.14
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.4)
       is-glob: 4.0.3
       is-plain-obj: 3.0.0
       micromatch: 4.0.5
@@ -7654,27 +7655,15 @@ packages:
       - debug
     dev: false
 
-  /http-proxy@1.18.1:
-    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      eventemitter3: 4.0.7
-      follow-redirects: 1.15.3(debug@4.3.2)
-      requires-port: 1.0.0
-    transitivePeerDependencies:
-      - debug
-    dev: true
-
   /http-proxy@1.18.1(debug@4.3.4):
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.3(debug@4.3.4)
+      follow-redirects: 1.15.5(debug@4.3.4)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
-    dev: false
 
   /http-shutdown@1.2.2:
     resolution: {integrity: sha512-S9wWkJ/VSY9/k4qcjG318bqJNruzE4HySUhFYknwmu6LBP97KLLfwNf+n4V1BHurvFNkSKLFnK/RsuUnRTf9Vw==}
@@ -8553,7 +8542,7 @@ packages:
       dom-serialize: 2.2.1
       glob: 7.2.3
       graceful-fs: 4.2.11
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.4)
       isbinaryfile: 4.0.10
       lodash: 4.17.21
       log4js: 6.9.1
@@ -9386,6 +9375,10 @@ packages:
 
   /napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
+    dev: false
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
     dev: false
 
   /needle@3.3.1:
